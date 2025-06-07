@@ -3,6 +3,7 @@ import useSWR from "swr";
 
 export type CategoryOptionType = {
   label: string;
+  slug: string;
   value: number;
 };
 

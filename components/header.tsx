@@ -18,11 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Search, LogOut, PenTool, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function Header({
-  onSearchSubmit,
-}: {
-  onSearchSubmit?: (query: string) => void;
-}) {
+export function Header() {
   const router = useRouter();
 
   const { user, onLogout, loading } = useAuth();

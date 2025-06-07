@@ -262,3 +262,15 @@ export const useStory = (slug: string) => {
     loading: isLoading || isValidating,
   };
 };
+
+export const useBreaking = () => {
+  const pathKey = `v1/public/stories/breaking`;
+
+  const { data, isLoading, isValidating } =
+    useSWR<ApiResponse<string[]>>(pathKey);
+
+  return {
+    data: data?.data || [],
+    loading: isLoading || isValidating,
+  };
+};

@@ -5,64 +5,49 @@ import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/header";
 import { CategoryNav } from "@/components/category-nav";
 import { StoryCard } from "@/components/story-card";
-import { mockStories, type Story } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BreakingNewsTicker } from "@/components/breaking-news-ticker";
 import { TrendingSection } from "@/components/trending-section";
-import { EditorPicks } from "@/components/editor-picks";
 import { FeaturedCategories } from "@/components/featured-categories";
 import { NewsletterSignup } from "@/components/newsletter-signup";
 import { Footer } from "@/components/footer";
 import Link from "next/link";
+import { useSearch } from "@/hooks/use-search";
 
 function HomeContent() {
   const searchParams = useSearchParams();
 
-  const [stories, setStories] = useState<Story[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [sortBy, setSortBy] = useState<"latest" | "popular">("latest");
+  const {
+    data: stories,
+    loading,
+    loadingMore,
+    onQuery,
+    loadMore,
+    hasNext,
+  } = useSearch();
 
   const categoryFilter = searchParams.get("category");
+  const [sortBy, setSortBy] = useState<"latest" | "popular">("latest");
+
+  const featuredStory = stories?.records ? stories.records[0] : null;
+  const regularStories = stories?.records?.slice(1);
 
   useEffect(() => {
-    // Simulate API call
-    const loadStories = async () => {
-      setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate loading
-
-      let filteredStories = mockStories.filter(
-        (story) => story.status === "PUBLISHED"
-      );
-
-      if (categoryFilter) {
-        filteredStories = filteredStories.filter(
-          (story) => story.category?.slug === categoryFilter
-        );
-      }
-
-      // Sort stories
-      if (sortBy === "latest") {
-        filteredStories.sort(
-          (a, b) =>
-            new Date(b.published_at || b.created_at).getTime() -
-            new Date(a.published_at || a.created_at).getTime()
-        );
-      } else {
-        filteredStories.sort(
-          (a, b) => (b.views_count || 0) - (a.views_count || 0)
-        );
-      }
-
-      setStories(filteredStories);
-      setLoading(false);
-    };
-
-    loadStories();
+    if (categoryFilter) {
+      onQuery({
+        categorySlug: categoryFilter,
+        size: 6,
+        sort: sortBy === "latest" ? "-published_at" : "-popular",
+      });
+    } else {
+      onQuery({
+        categorySlug: "",
+        size: 6,
+        sort: sortBy === "latest" ? "-published_at" : "-popular",
+      });
+    }
   }, [categoryFilter, sortBy]);
-
-  const featuredStory = stories[0];
-  const regularStories = stories.slice(1);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -115,22 +100,19 @@ function HomeContent() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
               {/* Main Featured Story */}
               <div className="lg:col-span-3">
                 {featuredStory && <StoryCard story={featuredStory} featured />}
               </div>
 
               {/* Trending Sidebar */}
-              <div className="lg:col-span-1">
+              <div className="lg:col-span-2">
                 <TrendingSection />
               </div>
             </div>
           )}
         </section>
-
-        {/* Editor's Picks */}
-        <EditorPicks />
 
         {/* Regular Stories Grid */}
         <section className="mb-12">
@@ -157,9 +139,9 @@ function HomeContent() {
                 </div>
               ))}
             </div>
-          ) : regularStories.length > 0 ? (
+          ) : regularStories?.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {regularStories.slice(0, 6).map((story) => (
+              {regularStories?.slice(0, 6).map((story) => (
                 <StoryCard key={story.id} story={story} />
               ))}
             </div>
@@ -171,6 +153,11 @@ function HomeContent() {
                   : "No stories found."}
               </p>
             </div>
+          )}
+          {hasNext && (
+            <button onClick={loadMore} disabled={loadingMore}>
+              {loadingMore ? "Loading..." : "Load More"}
+            </button>
           )}
         </section>
 

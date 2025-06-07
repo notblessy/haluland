@@ -1,27 +1,22 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Badge } from "@/components/ui/badge"
-import { AlertCircle } from "lucide-react"
-
-const breakingNews = [
-  "Taylor Swift announces surprise album release for next month",
-  "Marvel Studios reveals Phase 6 timeline at Comic-Con",
-  "Netflix orders 10 new original series for 2024",
-  "Grammy nominations announced with record-breaking diversity",
-  "Box office records shattered by latest superhero blockbuster",
-]
+import { useState, useEffect } from "react";
+import { Badge } from "@/components/ui/badge";
+import { AlertCircle } from "lucide-react";
+import { useBreaking } from "@/hooks/use-story";
 
 export function BreakingNewsTicker() {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const { data: breakingNews } = useBreaking();
+
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % breakingNews.length)
-    }, 4000)
+      setCurrentIndex((prev) => (prev + 1) % breakingNews?.length);
+    }, 4000);
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-2 overflow-hidden">
@@ -29,7 +24,10 @@ export function BreakingNewsTicker() {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2 flex-shrink-0">
             <AlertCircle className="h-4 w-4 animate-pulse" />
-            <Badge variant="secondary" className="bg-white text-red-600 font-bold text-xs">
+            <Badge
+              variant="secondary"
+              className="bg-white text-red-600 font-bold text-xs"
+            >
               BREAKING
             </Badge>
           </div>
@@ -39,8 +37,11 @@ export function BreakingNewsTicker() {
               className="whitespace-nowrap transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
-              {breakingNews.map((news, index) => (
-                <span key={index} className="inline-block w-full text-sm font-medium">
+              {breakingNews?.map((news, index) => (
+                <span
+                  key={index}
+                  className="inline-block w-full text-sm font-medium"
+                >
                   {news}
                 </span>
               ))}
@@ -49,5 +50,5 @@ export function BreakingNewsTicker() {
         </div>
       </div>
     </div>
-  )
+  );
 }

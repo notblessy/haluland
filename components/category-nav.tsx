@@ -1,14 +1,17 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useSearchParams } from "next/navigation"
-import { mockCategories } from "@/lib/mock-data"
-import { Badge } from "@/components/ui/badge"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import Link from "next/link";
+
+import { useSearchParams } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useCategoryOptions } from "@/hooks/use-categories";
 
 export function CategoryNav() {
-  const searchParams = useSearchParams()
-  const activeCategory = searchParams.get("category")
+  const searchParams = useSearchParams();
+  const activeCategory = searchParams.get("category");
+
+  const { data: categoryOptions } = useCategoryOptions();
 
   return (
     <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -23,13 +26,15 @@ export function CategoryNav() {
                 All Stories
               </Badge>
             </Link>
-            {mockCategories.map((category) => (
-              <Link key={category.id} href={`/?category=${category.slug}`}>
+            {categoryOptions?.map((category) => (
+              <Link key={category.value} href={`/?category=${category.slug}`}>
                 <Badge
-                  variant={activeCategory === category.slug ? "default" : "secondary"}
+                  variant={
+                    activeCategory === category.slug ? "default" : "secondary"
+                  }
                   className="cursor-pointer hover:bg-primary/80 transition-colors"
                 >
-                  {category.name}
+                  {category.label}
                 </Badge>
               </Link>
             ))}
@@ -38,5 +43,5 @@ export function CategoryNav() {
         </ScrollArea>
       </div>
     </div>
-  )
+  );
 }

@@ -11,8 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Footer } from "@/components/footer";
 import { useGoogleLogin } from "@react-oauth/google";
 
 import GoogleIcon from "@/components/icon/google-icon";

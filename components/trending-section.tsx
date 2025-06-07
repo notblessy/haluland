@@ -1,21 +1,23 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
-import { TrendingUp, Clock, Eye } from "lucide-react"
-import { formatDistanceToNow } from "date-fns"
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { TrendingUp, Clock, Eye } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { useSearch } from "@/hooks/use-search";
+import { useEffect } from "react";
 
 interface TrendingStory {
-  id: string
-  title: string
-  slug: string
-  views_count: number
-  published_at: string
+  id: string;
+  title: string;
+  slug: string;
+  views_count: number;
+  published_at: string;
   category: {
-    name: string
-    slug: string
-  }
+    name: string;
+    slug: string;
+  };
 }
 
 const trendingStories: TrendingStory[] = [
@@ -59,9 +61,19 @@ const trendingStories: TrendingStory[] = [
     published_at: "2024-12-06T20:15:00Z",
     category: { name: "Awards", slug: "awards" },
   },
-]
+];
 
 export function TrendingSection() {
+  const { data: stories, onQuery } = useSearch();
+
+  // add initial query for trending stories
+  useEffect(() => {
+    onQuery({
+      size: 5,
+      sort: "-popular",
+    });
+  }, [onQuery]);
+
   return (
     <Card>
       <CardContent className="p-6">
@@ -71,7 +83,7 @@ export function TrendingSection() {
         </div>
 
         <div className="space-y-4">
-          {trendingStories.map((story, index) => (
+          {stories?.records?.map((story, index) => (
             <Link key={story.id} href={`/stories/${story.slug}`}>
               <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-muted/50 transition-colors group">
                 <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
@@ -85,15 +97,22 @@ export function TrendingSection() {
 
                   <div className="flex items-center space-x-3 mt-2 text-xs text-muted-foreground">
                     <Badge variant="outline" className="text-xs">
-                      {story.category.name}
+                      {story?.category?.name}
                     </Badge>
                     <div className="flex items-center space-x-1">
                       <Eye className="h-3 w-3" />
-                      <span>{story.views_count.toLocaleString()}</span>
+                      <span>{story?.total_views?.toLocaleString()}</span>
                     </div>
                     <div className="flex items-center space-x-1">
                       <Clock className="h-3 w-3" />
-                      <span>{formatDistanceToNow(new Date(story.published_at), { addSuffix: true })}</span>
+                      <span>
+                        {formatDistanceToNow(
+                          new Date(story?.published_at as string),
+                          {
+                            addSuffix: true,
+                          }
+                        )}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -103,11 +122,14 @@ export function TrendingSection() {
         </div>
 
         <div className="mt-6 pt-4 border-t">
-          <Link href="/search?sort=popular" className="text-sm text-primary hover:underline font-medium">
+          <Link
+            href="/search?sort=popular"
+            className="text-sm text-primary hover:underline font-medium"
+          >
             View all trending stories →
           </Link>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
