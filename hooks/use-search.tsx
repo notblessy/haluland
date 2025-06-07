@@ -37,7 +37,7 @@ export const useSearch = () => {
   if (tagIds.length > 0) queryParams.append("tag_ids", tagIds.join(","));
   if (categorySlug) queryParams.append("category_slug", categorySlug);
 
-  const pathKey = `v1/stories?${queryParams.toString()}`;
+  const pathKey = `v1/public/stories?${queryParams.toString()}`;
 
   const { data, error, isValidating } =
     useSWR<ApiResponse<PaginatedResponse<StoryType>>>(pathKey);
