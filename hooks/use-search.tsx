@@ -15,8 +15,6 @@ interface QueryParams {
 }
 
 export const useSearch = () => {
-  const { user } = useAuth();
-
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(5);
   const [sort, setSort] = useState<string>("-published_at");
@@ -39,7 +37,7 @@ export const useSearch = () => {
   if (tagIds.length > 0) queryParams.append("tag_ids", tagIds.join(","));
   if (categorySlug) queryParams.append("category_slug", categorySlug);
 
-  const pathKey = user ? `v1/stories?${queryParams.toString()}` : null;
+  const pathKey = `v1/stories?${queryParams.toString()}`;
 
   const { data, error, isValidating } =
     useSWR<ApiResponse<PaginatedResponse<StoryType>>>(pathKey);
