@@ -5,12 +5,6 @@ import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { StoryCard } from "@/components/story-card";
-import {
-  mockStories,
-  mockCategories,
-  mockTags,
-  type Story,
-} from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -24,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Filter, X } from "lucide-react";
 import { useSearch } from "@/hooks/use-search";
 import { useTagOptions } from "@/hooks/use-tags";
+import { useCategoryOptions } from "@/hooks/use-categories";
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -38,7 +33,7 @@ function SearchContent() {
   } = useSearch();
 
   const { data: tagOptions } = useTagOptions();
-  const { data: categoryOptions } = useTagOptions();
+  const { data: categoryOptions } = useCategoryOptions();
 
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -225,8 +220,8 @@ function SearchContent() {
                   <Badge variant="secondary">
                     Category:{" "}
                     {
-                      mockCategories.find((c) => c.slug === selectedCategory)
-                        ?.name
+                      categoryOptions.find((c) => c.slug === selectedCategory)
+                        ?.label
                     }
                   </Badge>
                 )}

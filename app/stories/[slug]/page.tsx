@@ -228,11 +228,16 @@ export default function StoryPage() {
           <div className="mb-8">
             <Image
               src={story.thumbnail || "/placeholder.svg"}
-              alt={story.title}
+              alt={story.thumbnail_alt as string}
               width={800}
               height={450}
               className="w-full aspect-[16/9] object-cover rounded-xl"
             />
+            {story.thumbnail_alt && (
+              <p className="text-sm italic text-muted-foreground mt-2">
+                {story.thumbnail_alt}
+              </p>
+            )}
           </div>
 
           {/* Story Content */}
