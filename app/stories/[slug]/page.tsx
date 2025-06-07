@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Header } from "@/components/header";
@@ -26,7 +26,7 @@ export default function StoryPage() {
   const { toast } = useToast();
   const { user } = useAuth();
 
-  const { data: story, loading } = useStory(params.slug as string);
+  const { data: story, onTrackView, loading } = useStory(params.slug as string);
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
@@ -91,6 +91,12 @@ export default function StoryPage() {
       description: "Your comment has been posted successfully.",
     });
   };
+
+  useEffect(() => {
+    if (story) {
+      onTrackView(story.slug);
+    }
+  }, [story]);
 
   const handleShare = async () => {
     if (navigator.share) {

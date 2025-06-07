@@ -24,6 +24,7 @@ export type StoryType = {
   content: string;
   thumbnail: string;
   thumbnail_public_id: string | null;
+  thumbnail_alt?: string;
   category_id: number | null;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   published_at: string | null;
@@ -68,6 +69,7 @@ export type StoryRequestType = {
   content: string;
   thumbnail: string;
   thumbnail_public_id: string | null;
+  thumbnail_alt?: string;
   category_id: number | null;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   published_at: string | null;
@@ -257,8 +259,23 @@ export const useStory = (slug: string) => {
   const { data, isLoading, isValidating } =
     useSWR<ApiResponse<StoryType>>(pathKey);
 
+  const onTrackView = useCallback((slug: string) => {
+    try {
+      const key = `viewed::${slug}`;
+      const viewed = localStorage.getItem(key);
+      if (viewed) return;
+
+      api.post<ApiResponse<null>>(`v1/track/stories/${slug}/views`);
+      localStorage.setItem(key, "true");
+      mutate(pathKey);
+    } catch (error) {
+      console.error("Failed to track view for story:", error);
+    }
+  }, []);
+
   return {
     data: data?.data as StoryType | null,
+    onTrackView,
     loading: isLoading || isValidating,
   };
 };

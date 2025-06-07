@@ -34,12 +34,15 @@ import { ImageUpload } from "@/components/image-upload";
 import { StoryRequestType, StoryType, useStories } from "@/hooks/use-story";
 import { useTagOptions } from "@/hooks/use-tags";
 import { MarkdownEditor } from "@/components/markdown-editor";
+import { useCategoryOptions } from "@/hooks/use-categories";
 
 export default function NewStoryPage() {
   const router = useRouter();
 
   const { user } = useAuth();
   const { toast } = useToast();
+
+  const { data: categoryOptions } = useCategoryOptions();
 
   const { onAdd, loading } = useStories();
   const { data: tags } = useTagOptions();
@@ -48,6 +51,10 @@ export default function NewStoryPage() {
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [thumbnail, setThumbnail] = useState("");
+  const [thumbnailPublicId, setThumbnailPublicId] = useState<string | null>(
+    null
+  );
+  const [thumbnailAlt, setThumbnailAlt] = useState("");
   const [categoryId, setCategoryId] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
 
@@ -86,7 +93,15 @@ export default function NewStoryPage() {
       });
       return;
     }
-    console.log("selectedTags", selectedTags);
+
+    if (!categoryId) {
+      toast({
+        title: "Category required",
+        description: "Please select a category for your story.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const newStory: Partial<StoryRequestType> = {
       author_id: user?.id as string,
@@ -94,7 +109,8 @@ export default function NewStoryPage() {
       excerpt: excerpt.trim(),
       content: content.trim(),
       thumbnail: thumbnail || "/placeholder.svg?height=400&width=600",
-      thumbnail_public_id: null,
+      thumbnail_public_id: thumbnailPublicId ? thumbnailPublicId : null,
+      thumbnail_alt: thumbnailAlt.trim(),
       category_id: categoryId ? Number.parseInt(categoryId) : null,
       status,
       published_at: status === "PUBLISHED" ? new Date().toISOString() : null,
@@ -114,7 +130,7 @@ export default function NewStoryPage() {
       <Header />
 
       <main className="container mx-auto px-4 py-8 flex-grow">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {/* Header */}
           <Button variant="ghost" size="sm" className="mb-5" asChild>
             <Link href="/dashboard">
@@ -206,7 +222,24 @@ export default function NewStoryPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <ImageUpload value={thumbnail} onChange={setThumbnail} />
+                  <ImageUpload
+                    value={thumbnail}
+                    onChange={(url, publicId) => {
+                      setThumbnail(url);
+                      setThumbnailPublicId(publicId);
+                    }}
+                  />
+
+                  <div className="space-y-2">
+                    <Label htmlFor="caption">Image Caption</Label>
+                    <Input
+                      id="caption"
+                      placeholder="Caption/Credit..."
+                      value={thumbnailAlt}
+                      onChange={(e) => setThumbnailAlt(e.target.value)}
+                      className="text-lg"
+                    />
+                  </div>
 
                   <Separator />
 
@@ -217,12 +250,12 @@ export default function NewStoryPage() {
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
                       <SelectContent>
-                        {mockCategories.map((category) => (
+                        {categoryOptions.map((category) => (
                           <SelectItem
-                            key={category.id}
-                            value={category.id.toString()}
+                            key={category.value}
+                            value={category.value.toString()}
                           >
-                            {category.name}
+                            {category.label}
                           </SelectItem>
                         ))}
                       </SelectContent>

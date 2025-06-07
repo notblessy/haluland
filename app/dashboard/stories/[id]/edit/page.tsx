@@ -52,6 +52,10 @@ export default function EditStoryPage() {
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [thumbnail, setThumbnail] = useState("");
+  const [thumbnailPublicId, setThumbnailPublicId] = useState<string | null>(
+    null
+  );
+  const [thumbnailAlt, setThumbnailAlt] = useState<string>("");
   const [categoryId, setCategoryId] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
 
@@ -107,7 +111,8 @@ export default function EditStoryPage() {
       excerpt: excerpt === story?.excerpt ? undefined : excerpt.trim(),
       content: content === story?.content ? undefined : content.trim(),
       thumbnail: thumbnail || story?.thumbnail,
-      thumbnail_public_id: null,
+      thumbnail_alt: thumbnailAlt || story?.thumbnail_alt,
+      thumbnail_public_id: thumbnailPublicId || story?.thumbnail_public_id,
       category_id: categoryId ? parseInt(categoryId) : null,
       status: status || story?.status,
       tags: selectedTags,
@@ -158,7 +163,7 @@ export default function EditStoryPage() {
       <Header />
 
       <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {/* Header */}
           <Button variant="ghost" size="sm" asChild className="mb-4">
             <Link href="/dashboard">
