@@ -1,16 +1,11 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import Link from "next/link";
+
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Header } from "@/components/header";
-import { RichTextEditor } from "@/components/rich-text-editor";
-import {
-  mockStories,
-  mockCategories,
-  mockTags,
-  type Story,
-} from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,10 +28,10 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Save, Eye, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import Link from "next/link";
 import { ImageUpload } from "@/components/image-upload";
 import { useStories, useStoryById } from "@/hooks/use-story";
 import { MarkdownEditor } from "@/components/markdown-editor";
+import { useCategoryOptions } from "@/hooks/use-categories";
 
 export default function EditStoryPage() {
   const params = useParams();
@@ -47,6 +42,9 @@ export default function EditStoryPage() {
 
   const { edit: editStory, delete: deleteStory } = useStories();
   const { data: story, loading } = useStoryById(params?.id as string);
+
+  const { data: categoryOptions } = useCategoryOptions();
+  const { data: tagOptions } = useCategoryOptions();
 
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
@@ -271,12 +269,12 @@ export default function EditStoryPage() {
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
                       <SelectContent>
-                        {mockCategories.map((category) => (
+                        {categoryOptions?.map((category) => (
                           <SelectItem
-                            key={category.id}
-                            value={category.id.toString()}
+                            key={category.value}
+                            value={category.value.toString()}
                           >
-                            {category.name}
+                            {category.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -288,18 +286,18 @@ export default function EditStoryPage() {
                   <div className="space-y-3">
                     <Label>Tags</Label>
                     <div className="flex flex-wrap gap-2">
-                      {mockTags.map((tag) => (
+                      {tagOptions.map((tag) => (
                         <Badge
-                          key={tag.id}
+                          key={tag.value}
                           variant={
-                            selectedTags.includes(tag.id)
+                            selectedTags.includes(tag.value)
                               ? "default"
                               : "outline"
                           }
                           className="cursor-pointer hover:bg-primary/80 transition-colors"
-                          onClick={() => handleTagToggle(tag.id)}
+                          onClick={() => handleTagToggle(tag.value)}
                         >
-                          {tag.name}
+                          {tag.label}
                         </Badge>
                       ))}
                     </div>
