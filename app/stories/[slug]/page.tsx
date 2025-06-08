@@ -19,6 +19,8 @@ import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { useStory } from "@/hooks/use-story";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
+import { useReactions } from "@/hooks/use-reactions";
+import { set } from "lodash";
 
 export default function StoryPage() {
   const params = useParams();
@@ -26,12 +28,20 @@ export default function StoryPage() {
   const { toast } = useToast();
   const { user } = useAuth();
 
-  const { data: story, onTrackView, loading } = useStory(params.slug as string);
+  const { data: story, onTrackView, refetch } = useStory(params.slug as string);
 
-  const [comments, setComments] = useState<Comment[]>([]);
+  const {
+    onLike,
+    onDislike,
+    onComment,
+    onDeleteComment,
+    loading: reactionLoading,
+    commentLoading: reactionCommentLoading,
+    deleteCommentLoading: reactionDeleteCommentLoading,
+  } = useReactions();
+
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [newComment, setNewComment] = useState("");
-  const [isLiked, setIsLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
 
   const handleLike = async () => {
     if (!user) {
@@ -40,19 +50,19 @@ export default function StoryPage() {
         description: "Please login to like stories.",
         variant: "destructive",
       });
+
       return;
     }
 
-    // Simulate API call
-    setIsLiked(!isLiked);
-    setLikesCount((prev) => (isLiked ? prev - 1 : prev + 1));
+    if (!story) return;
 
-    toast({
-      title: isLiked ? "Story unliked" : "Story liked",
-      description: isLiked
-        ? "Removed from your liked stories"
-        : "Added to your liked stories",
-    });
+    if (story.is_liked) {
+      await onDislike(story.id);
+    } else {
+      await onLike(story.id);
+    }
+
+    refetch();
   };
 
   const handleComment = async (e: React.FormEvent) => {
@@ -69,27 +79,27 @@ export default function StoryPage() {
 
     if (!newComment.trim()) return;
 
-    // Simulate API call
-    const comment: Comment = {
-      id: Date.now().toString(),
-      story_id: story!.id,
-      user_id: user.id,
-      content: newComment.trim(),
-      created_at: new Date().toISOString(),
-      user: {
-        id: user.id,
-        name: user.name,
-        picture: user.picture,
-      },
-    };
+    await onComment(story?.id as string, newComment.trim());
 
-    setComments((prev) => [comment, ...prev]);
-    setNewComment("");
+    refetch();
+  };
 
-    toast({
-      title: "Comment added",
-      description: "Your comment has been posted successfully.",
-    });
+  const handleDeleteComment = async (commentId: string) => {
+    if (!user) {
+      toast({
+        title: "Login Required",
+        description: "Please login to delete comments.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setDeletingId(commentId);
+
+    await onDeleteComment(commentId);
+    refetch();
+
+    setDeletingId(null);
   };
 
   useEffect(() => {
@@ -99,6 +109,9 @@ export default function StoryPage() {
   }, [story]);
 
   const handleShare = async () => {
+    if (typeof window === "undefined" || typeof navigator === "undefined")
+      return;
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -118,28 +131,6 @@ export default function StoryPage() {
       });
     }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Header />
-        <div className="container mx-auto px-4 py-8 flex-grow">
-          <div className="max-w-4xl mx-auto">
-            <div className="animate-pulse space-y-6">
-              <div className="h-8 bg-muted rounded w-3/4"></div>
-              <div className="aspect-[16/9] bg-muted rounded-xl"></div>
-              <div className="space-y-3">
-                <div className="h-4 bg-muted rounded w-full"></div>
-                <div className="h-4 bg-muted rounded w-full"></div>
-                <div className="h-4 bg-muted rounded w-2/3"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
 
   if (!story) {
     return (
@@ -207,15 +198,23 @@ export default function StoryPage() {
 
               <div className="flex items-center space-x-4">
                 <Button
-                  variant={isLiked ? "default" : "outline"}
+                  variant={story?.is_liked ? "default" : "outline"}
                   size="sm"
                   onClick={handleLike}
                   className="flex items-center space-x-2"
                 >
-                  <Heart
-                    className={`h-4 w-4 ${isLiked ? "fill-current" : ""}`}
-                  />
-                  <span>{likesCount}</span>
+                  {reactionLoading ? (
+                    <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+                  ) : (
+                    <>
+                      <Heart
+                        className={`h-4 w-4 ${
+                          story?.is_liked ? "fill-current" : ""
+                        }`}
+                      />
+                    </>
+                  )}
+                  <span>{story?.total_likes}</span>
                 </Button>
                 <Button variant="outline" size="sm" onClick={handleShare}>
                   <Share2 className="h-4 w-4" />
@@ -253,7 +252,7 @@ export default function StoryPage() {
           {/* Comments Section */}
           <section>
             <h2 className="text-2xl font-bold mb-6">
-              Comments ({comments.length})
+              Comments ({story?.comments?.length})
             </h2>
 
             {/* Add Comment Form */}
@@ -271,8 +270,21 @@ export default function StoryPage() {
                       onChange={(e) => setNewComment(e.target.value)}
                       className="mb-3"
                     />
-                    <Button type="submit" disabled={!newComment.trim()}>
-                      Post Comment
+                    <Button
+                      type="submit"
+                      variant="default"
+                      disabled={!newComment.trim() || reactionCommentLoading}
+                    >
+                      {reactionCommentLoading && (
+                        <span className="absolute animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+                      )}
+                      <span
+                        className={
+                          reactionCommentLoading ? "invisible" : "visible"
+                        }
+                      >
+                        Post Comment
+                      </span>
                     </Button>
                   </div>
                 </div>
@@ -291,7 +303,7 @@ export default function StoryPage() {
 
             {/* Comments List */}
             <div className="space-y-6">
-              {comments.map((comment) => (
+              {story?.comments?.map((comment) => (
                 <div key={comment.id} className="flex space-x-4">
                   <Avatar>
                     <AvatarImage src={comment.user?.picture || undefined} />
@@ -300,22 +312,59 @@ export default function StoryPage() {
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="font-medium">
-                        {comment.user?.name || "Anonymous"}
-                      </span>
-                      <span className="text-sm text-muted-foreground">
-                        {formatDistanceToNow(new Date(comment.created_at), {
-                          addSuffix: true,
-                        })}
-                      </span>
+                    <div className="flex justify-between">
+                      <div className="flex flex-col">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <span className="font-medium">
+                            {comment.user?.name || "Anonymous"}
+                          </span>
+                          <span className="text-sm text-muted-foreground">
+                            {formatDistanceToNow(new Date(comment.created_at), {
+                              addSuffix: true,
+                            })}
+                          </span>
+                        </div>
+                        <p className="text-muted-foreground">
+                          {comment.content}
+                        </p>
+                      </div>
+                      {user?.id === comment.user?.id && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-muted-foreground hover:text-destructive"
+                          onClick={() => handleDeleteComment(comment.id)}
+                        >
+                          {reactionDeleteCommentLoading &&
+                          comment?.id === deletingId ? (
+                            <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+                          ) : (
+                            <>
+                              <span className="sr-only">Delete Comment</span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={2}
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
+                              </svg>
+                            </>
+                          )}
+                        </Button>
+                      )}
                     </div>
-                    <p className="text-muted-foreground">{comment.content}</p>
                   </div>
                 </div>
               ))}
 
-              {comments.length === 0 && (
+              {story?.comments?.length === 0 && (
                 <p className="text-center text-muted-foreground py-8">
                   No comments yet. Be the first to comment!
                 </p>

@@ -1,7 +1,7 @@
 import api from "@/lib/api";
 import useSWR, { mutate } from "swr";
 
-import { useAuth } from "@/lib/auth-context";
+import { useAuth, UserType } from "@/lib/auth-context";
 import { ApiResponse, PaginatedResponse } from "@/lib/types";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,15 @@ export type Tag = {
   slug: string;
   created_at: string;
   updated_at: string;
+};
+
+export type Comment = {
+  id: string;
+  user_id: string;
+  story_id: string;
+  content: string;
+  created_at: string;
+  user: UserType;
 };
 
 export type StoryType = {
@@ -31,6 +40,7 @@ export type StoryType = {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
+  is_liked: boolean;
   category?: {
     id: number;
     name: string;
@@ -48,6 +58,7 @@ export type StoryType = {
     updated_at: string;
   };
   tags?: Tag[];
+  comments?: Comment[];
   total_views?: number;
   total_comments?: number;
   total_likes?: number;
@@ -257,7 +268,11 @@ export const useStoryById = (id: string) => {
 };
 
 export const useStory = (slug: string) => {
-  const pathKey = `v1/public/stories/${slug}`;
+  const { user } = useAuth();
+
+  const pathKey = `v1/public/stories/${slug}?user_id=${
+    user?.id ? user?.id : ""
+  }`;
 
   const { data, isLoading, isValidating } = useSWR<ApiResponse<StoryType>>(
     pathKey,
@@ -282,6 +297,7 @@ export const useStory = (slug: string) => {
     data: data?.data as StoryType | null,
     onTrackView,
     loading: isLoading || isValidating,
+    refetch: () => mutate(pathKey),
   };
 };
 

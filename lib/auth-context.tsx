@@ -59,7 +59,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     error,
     isLoading,
     isValidating,
-  } = useSWR(() => (accessToken ? "/v1/users/me" : ""));
+  } = useSWR(() => (accessToken ? "/v1/users/me" : null), {
+    revalidateOnFocus: false,
+  });
 
   useEffect(() => {
     if (cookies.accessToken) {
