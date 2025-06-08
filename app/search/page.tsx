@@ -45,7 +45,7 @@ function SearchContent() {
       onQuery({
         search: searchQuery,
         size: 6,
-        sort: sortBy === "latest" ? "-published_at" : "-views_count",
+        sort: sortBy === "latest" ? "-published_at" : "-popular",
       });
     }
 
@@ -54,13 +54,13 @@ function SearchContent() {
         onQuery({
           categoryId: undefined,
           size: 6,
-          sort: sortBy === "latest" ? "-published_at" : "-views_count",
+          sort: sortBy === "latest" ? "-published_at" : "-popular",
         });
       } else {
         onQuery({
           categoryId: selectedCategory,
           size: 6,
-          sort: sortBy === "latest" ? "-published_at" : "-views_count",
+          sort: sortBy === "latest" ? "-published_at" : "-popular",
         });
       }
     }
@@ -69,7 +69,7 @@ function SearchContent() {
       onQuery({
         tagIds: selectedTags,
         size: 6,
-        sort: sortBy === "latest" ? "-published_at" : "-views_count",
+        sort: sortBy === "latest" ? "-published_at" : "-popular",
       });
     }
 
@@ -107,7 +107,7 @@ function SearchContent() {
       categoryId: "",
       tagIds: [],
       size: 6,
-      sort: sortBy === "latest" ? "-published_at" : "-views_count",
+      sort: sortBy === "latest" ? "-published_at" : "-popular",
     });
   };
 

@@ -1,23 +1,24 @@
-import Link from "next/link"
-import Image from "next/image"
-import type { Story } from "@/lib/mock-data"
-import { Badge } from "@/components/ui/badge"
-import { Heart, MessageCircle, Eye } from "lucide-react"
-import { formatDistanceToNow } from "date-fns"
+import Link from "next/link";
+import Image from "next/image";
+
+import { Badge } from "@/components/ui/badge";
+import { Heart, MessageCircle, Eye } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { StoryType } from "@/hooks/use-story";
 
 interface StoryCardProps {
-  story: Story
-  featured?: boolean
+  story: StoryType;
+  featured?: boolean;
 }
 
 export function StoryCard({ story, featured = false }: StoryCardProps) {
   const cardClasses = featured
     ? "group relative overflow-hidden rounded-xl bg-card border shadow-lg hover:shadow-xl transition-all duration-300 md:col-span-2 lg:col-span-3"
-    : "group relative overflow-hidden rounded-xl bg-card border shadow-lg hover:shadow-xl transition-all duration-300"
+    : "group relative overflow-hidden rounded-xl bg-card border shadow-lg hover:shadow-xl transition-all duration-300";
 
   const imageClasses = featured
     ? "aspect-[16/9] w-full object-cover group-hover:scale-105 transition-transform duration-300"
-    : "aspect-[4/3] w-full object-cover group-hover:scale-105 transition-transform duration-300"
+    : "aspect-[4/3] w-full object-cover group-hover:scale-105 transition-transform duration-300";
 
   return (
     <article className={cardClasses}>
@@ -34,7 +35,10 @@ export function StoryCard({ story, featured = false }: StoryCardProps) {
 
           {/* Category Badge */}
           {story.category && (
-            <Badge variant="secondary" className="absolute top-4 left-4 bg-white/90 text-black hover:bg-white">
+            <Badge
+              variant="secondary"
+              className="absolute top-4 left-4 bg-white/90 text-black hover:bg-white"
+            >
               {story.category.name}
             </Badge>
           )}
@@ -50,7 +54,11 @@ export function StoryCard({ story, featured = false }: StoryCardProps) {
               {story.title}
             </h2>
 
-            <p className={`text-muted-foreground line-clamp-2 ${featured ? "text-base" : "text-sm"}`}>
+            <p
+              className={`text-muted-foreground line-clamp-2 ${
+                featured ? "text-base" : "text-sm"
+              }`}
+            >
               {story.excerpt}
             </p>
 
@@ -68,24 +76,30 @@ export function StoryCard({ story, featured = false }: StoryCardProps) {
             {/* Meta Information */}
             <div className="flex items-center justify-between text-sm text-muted-foreground">
               <div className="flex items-center space-x-4">
-                {story.author && <span className="font-medium">{story.author.name}</span>}
+                {story.author && (
+                  <span className="font-medium">{story.author.name}</span>
+                )}
                 {story.published_at && (
-                  <span>{formatDistanceToNow(new Date(story.published_at), { addSuffix: true })}</span>
+                  <span>
+                    {formatDistanceToNow(new Date(story.published_at), {
+                      addSuffix: true,
+                    })}
+                  </span>
                 )}
               </div>
 
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-1">
                   <Heart className="h-4 w-4" />
-                  <span>{story.likes_count || 0}</span>
+                  <span>{story.total_likes || 0}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <MessageCircle className="h-4 w-4" />
-                  <span>{story.comments_count || 0}</span>
+                  <span>{story.total_comments || 0}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Eye className="h-4 w-4" />
-                  <span>{story.views_count || 0}</span>
+                  <span>{story.total_views || 0}</span>
                 </div>
               </div>
             </div>
@@ -93,5 +107,5 @@ export function StoryCard({ story, featured = false }: StoryCardProps) {
         </div>
       </Link>
     </article>
-  )
+  );
 }

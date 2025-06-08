@@ -10,8 +10,9 @@ export type CategoryOptionType = {
 export const useCategoryOptions = () => {
   const pathKey = `v1/options/categories`;
 
-  const { data, isLoading, isValidating } =
-    useSWR<ApiResponse<CategoryOptionType[]>>(pathKey);
+  const { data, isLoading, isValidating } = useSWR<
+    ApiResponse<CategoryOptionType[]>
+  >(pathKey, { revalidateOnFocus: false });
 
   return {
     data: data?.data || [],

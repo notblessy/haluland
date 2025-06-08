@@ -9,8 +9,9 @@ export type TagOptionType = {
 export const useTagOptions = () => {
   const pathKey = `v1/options/tags`;
 
-  const { data, isLoading, isValidating } =
-    useSWR<ApiResponse<TagOptionType[]>>(pathKey);
+  const { data, isLoading, isValidating } = useSWR<
+    ApiResponse<TagOptionType[]>
+  >(pathKey, { revalidateOnFocus: false });
 
   return {
     data: data?.data || [],

@@ -39,8 +39,9 @@ export const useSearch = () => {
 
   const pathKey = `v1/public/stories?${queryParams.toString()}`;
 
-  const { data, error, isValidating } =
-    useSWR<ApiResponse<PaginatedResponse<StoryType>>>(pathKey);
+  const { data, error, isValidating } = useSWR<
+    ApiResponse<PaginatedResponse<StoryType>>
+  >(pathKey, { revalidateOnFocus: false });
 
   useEffect(() => {
     if (!data) return;

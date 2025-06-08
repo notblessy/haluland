@@ -98,8 +98,9 @@ export const useStories = () => {
       ? `?page=${page}&size=${size}&sort=${sort}&search=${search}&user_id=${userId}&status=${status}`
       : ""
   }`;
-  const { data, error, isValidating } =
-    useSWR<ApiResponse<PaginatedResponse<StoryType>>>(pathKey);
+  const { data, error, isValidating } = useSWR<
+    ApiResponse<PaginatedResponse<StoryType>>
+  >(pathKey, { revalidateOnFocus: false });
 
   const onAdd = useCallback(
     async (storyData: Partial<StoryRequestType>) => {
@@ -244,8 +245,10 @@ export const useStories = () => {
 export const useStoryById = (id: string) => {
   const pathKey = `v1/stories/${id}`;
 
-  const { data, isLoading, isValidating } =
-    useSWR<ApiResponse<StoryType>>(pathKey);
+  const { data, isLoading, isValidating } = useSWR<ApiResponse<StoryType>>(
+    pathKey,
+    { revalidateOnFocus: false }
+  );
 
   return {
     data: data?.data as StoryType | null,
@@ -256,8 +259,10 @@ export const useStoryById = (id: string) => {
 export const useStory = (slug: string) => {
   const pathKey = `v1/public/stories/${slug}`;
 
-  const { data, isLoading, isValidating } =
-    useSWR<ApiResponse<StoryType>>(pathKey);
+  const { data, isLoading, isValidating } = useSWR<ApiResponse<StoryType>>(
+    pathKey,
+    { revalidateOnFocus: false }
+  );
 
   const onTrackView = useCallback((slug: string) => {
     try {
@@ -283,8 +288,10 @@ export const useStory = (slug: string) => {
 export const useBreaking = () => {
   const pathKey = `v1/public/stories/breaking`;
 
-  const { data, isLoading, isValidating } =
-    useSWR<ApiResponse<string[]>>(pathKey);
+  const { data, isLoading, isValidating } = useSWR<ApiResponse<string[]>>(
+    pathKey,
+    { revalidateOnFocus: false }
+  );
 
   return {
     data: data?.data || [],
