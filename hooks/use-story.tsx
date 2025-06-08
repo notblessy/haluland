@@ -267,7 +267,7 @@ export const useStoryById = (id: string) => {
   };
 };
 
-export const useStory = (slug: string) => {
+export const useStory = (slug: string, initialStory?: StoryType) => {
   const { user } = useAuth();
 
   const pathKey = `v1/public/stories/${slug}?user_id=${
@@ -276,7 +276,12 @@ export const useStory = (slug: string) => {
 
   const { data, isLoading, isValidating } = useSWR<ApiResponse<StoryType>>(
     pathKey,
-    { revalidateOnFocus: false }
+    {
+      revalidateOnFocus: false,
+      fallbackData: initialStory
+        ? { data: initialStory, success: true, message: "" }
+        : undefined,
+    }
   );
 
   const onTrackView = useCallback((slug: string) => {
