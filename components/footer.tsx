@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -27,9 +28,17 @@ export function Footer() {
           {/* Brand Column */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
-                <span className="text-white font-bold">H</span>
-              </div>
+              <Avatar className="h-10 w-10">
+                <AvatarImage
+                  src="https://res.cloudinary.com/dn3wcoghh/image/upload/w_1000,ar_1:1,c_fill,g_auto,e_art:hokusai/v1749363888/dev/haluland-media/internal/haluland-circle_gaj7wu.png"
+                  alt="Haluland Logo"
+                />
+                <AvatarFallback>
+                  <div className="h-10 w-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
+                    <span className="text-white font-bold">H</span>
+                  </div>
+                </AvatarFallback>
+              </Avatar>
               <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 Haluland
               </span>
