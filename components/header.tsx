@@ -50,9 +50,17 @@ export function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">H</span>
-            </div>
+            <Avatar className="h-8 w-8">
+              <AvatarImage
+                src="https://res.cloudinary.com/dn3wcoghh/image/upload/c_thumb,w_200,g_face/v1749363233/dev/haluland-media/internal/haluland-bg_sktbsu.png"
+                alt="Haluland Logo"
+              />
+              <AvatarFallback>
+                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">H</span>
+                </div>
+              </AvatarFallback>
+            </Avatar>
             <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               Haluland
             </span>
