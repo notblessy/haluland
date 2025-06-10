@@ -281,6 +281,17 @@ export default function EditStoryPage() {
                     </Select>
                   </div>
 
+                  <div className="space-y-2">
+                    <Label htmlFor="caption">Image Caption</Label>
+                    <Input
+                      id="caption"
+                      placeholder="Caption/Credit..."
+                      value={thumbnailAlt}
+                      onChange={(e) => setThumbnailAlt(e.target.value)}
+                      className="text-lg"
+                    />
+                  </div>
+
                   <Separator />
 
                   <div className="space-y-3">
