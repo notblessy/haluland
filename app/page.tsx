@@ -155,9 +155,16 @@ function HomeContent() {
             </div>
           )}
           {hasNext && (
-            <button onClick={loadMore} disabled={loadingMore}>
-              {loadingMore ? "Loading..." : "Load More"}
-            </button>
+            <div className="text-center mt-8">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={loadMore}
+                disabled={loadingMore}
+              >
+                {loadingMore ? "Loading..." : "Load More"}
+              </Button>
+            </div>
           )}
         </section>
 

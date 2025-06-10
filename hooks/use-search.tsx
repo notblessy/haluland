@@ -18,7 +18,7 @@ export const useSearch = () => {
   const { user } = useAuth();
 
   const [page, setPage] = useState<number>(1);
-  const [size, setSize] = useState<number>(5);
+  const [size, setSize] = useState<number>(6);
   const [sort, setSort] = useState<string>("-published_at");
   const [search, setSearch] = useState<string>("");
   const [categoryId, setCategoryId] = useState<string>("");
