@@ -267,9 +267,16 @@ function SearchContent() {
               ))}
 
               {hasNext && (
-                <button onClick={loadMore} disabled={loadingMore}>
-                  {loadingMore ? "Loading..." : "Load More"}
-                </button>
+                <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center mt-8">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={loadMore}
+                    disabled={loadingMore}
+                  >
+                    {loadingMore ? "Loading..." : "Load More"}
+                  </Button>
+                </div>
               )}
             </div>
           ) : (
