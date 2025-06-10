@@ -63,6 +63,8 @@ export default function EditStoryPage() {
       setExcerpt(story.excerpt);
       setContent(story.content);
       setThumbnail(story.thumbnail);
+      setThumbnailPublicId(story.thumbnail_public_id || null);
+      setThumbnailAlt(story.thumbnail_alt || "");
       setCategoryId(story.category_id?.toString() || "");
       setSelectedTags(story.tags?.map((tag) => tag.id) || []);
     }
