@@ -184,7 +184,10 @@ export default function StoryPage({
                 {story.author && (
                   <div className="flex items-center space-x-3">
                     <Avatar>
-                      <AvatarImage src={story.author.picture || undefined} />
+                      <AvatarImage
+                        src={story.author.picture || undefined}
+                        className="rounded-full"
+                      />
                       <AvatarFallback>
                         {story.author.name.charAt(0)}
                       </AvatarFallback>
