@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://haluland.com
+
+# Sitemaps
+Sitemap: https://haluland.com/sitemap.xml
