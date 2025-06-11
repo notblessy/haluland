@@ -19,6 +19,30 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
     shortcut: "/favicon-32x32.png",
   },
+  openGraph: {
+    title: "Haluland – Music & Movie News",
+    description:
+      "Haluland covers the latest music and movie news, reviews, interviews, and trending entertainment stories.",
+    url: "https://haluland.com",
+    siteName: "Haluland",
+    images: [
+      {
+        url: "https://haluland.com/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Haluland – Music & Movie News",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Haluland – Music & Movie News",
+    description:
+      "Haluland covers the latest music and movie news, reviews, interviews, and trending entertainment stories.",
+    images: ["https://haluland.com/og-image.png"],
+  },
 };
 
 export default function RootLayout({
