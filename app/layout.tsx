@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import config from "@/config";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,6 +44,11 @@ export const metadata: Metadata = {
       "Haluland covers the latest music and movie news, reviews, interviews, and trending entertainment stories.",
     images: ["https://haluland.com/og-image.png"],
   },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+  },
 };
 
 export default function RootLayout({
@@ -53,6 +59,20 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
+        <Script
+          id="ld-json"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Haluland",
+              url: "https://haluland.com",
+              logo: "https://haluland.com/logo.png",
+            }),
+          }}
+        />
         <Provider googleClientId={config.GOOGLE_CLIENT_ID || ""}>
           {children}
         </Provider>
