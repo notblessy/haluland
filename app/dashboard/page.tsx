@@ -241,7 +241,7 @@ export default function DashboardPage() {
                                 { addSuffix: true }
                               )}`}
                         </span>
-                        <span>{story.total_views || 0} views</span>
+                        {/* <span>{story.total_views || 0} views</span> */}
                         <span>{story.total_likes || 0} likes</span>
                         <span>{story.total_comments || 0} comments</span>
                       </div>

@@ -97,10 +97,10 @@ export function StoryCard({ story, featured = false }: StoryCardProps) {
                   <MessageCircle className="h-4 w-4" />
                   <span>{story.total_comments || 0}</span>
                 </div>
-                <div className="flex items-center space-x-1">
+                {/* <div className="flex items-center space-x-1">
                   <Eye className="h-4 w-4" />
                   <span>{story.total_views || 0}</span>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

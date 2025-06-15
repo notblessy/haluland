@@ -99,10 +99,10 @@ export function TrendingSection() {
                     <Badge variant="outline" className="text-xs">
                       {story?.category?.name}
                     </Badge>
-                    <div className="flex items-center space-x-1">
+                    {/* <div className="flex items-center space-x-1">
                       <Eye className="h-3 w-3" />
                       <span>{story?.total_views?.toLocaleString()}</span>
-                    </div>
+                    </div> */}
                     <div className="flex items-center space-x-1">
                       <Clock className="h-3 w-3" />
                       <span>
