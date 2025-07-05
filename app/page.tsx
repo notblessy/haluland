@@ -37,13 +37,13 @@ function HomeContent() {
     if (categoryFilter) {
       onQuery({
         categorySlug: categoryFilter,
-        size: 6,
+        size: 7,
         sort: sortBy === "latest" ? "-published_at" : "-popular",
       });
     } else {
       onQuery({
         categorySlug: "",
-        size: 6,
+        size: 7,
         sort: sortBy === "latest" ? "-published_at" : "-popular",
       });
     }
@@ -154,6 +154,17 @@ function HomeContent() {
               </p>
             </div>
           )}
+          
+          {regularStories?.length > 0 && (
+            <div className="text-center mt-8">
+              <Link href="/search">
+                <Button variant="outline" size="lg">
+                  View More Stories
+                </Button>
+              </Link>
+            </div>
+          )}
+          
           {hasNext && (
             <div className="text-center mt-8">
               <Button
