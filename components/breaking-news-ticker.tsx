@@ -32,20 +32,21 @@ export function BreakingNewsTicker() {
             </Badge>
           </div>
 
-          <div className="flex-1 overflow-hidden">
-            <div
-              className="whitespace-nowrap transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-            >
-              {breakingNews?.map((news, index) => (
-                <span
-                  key={index}
-                  className="inline-block w-full text-sm font-medium"
-                >
-                  {news}
-                </span>
-              ))}
-            </div>
+          <div className="flex-1 overflow-hidden relative" style={{ minHeight: 24 }}>
+            {breakingNews?.map((news, index) => (
+              <span
+                key={index}
+                className={`absolute left-0 top-0 w-full text-sm font-medium transition-opacity duration-500 ease-in-out ${index === currentIndex ? 'opacity-100' : 'opacity-0'} ${index === currentIndex ? 'z-10' : 'z-0'}`}
+                style={{
+                  whiteSpace: 'nowrap',
+                  paddingRight: '1rem',
+                  paddingLeft: '1rem',
+                  pointerEvents: index === currentIndex ? 'auto' : 'none',
+                }}
+              >
+                {news}
+              </span>
+            ))}
           </div>
         </div>
       </div>
