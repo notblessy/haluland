@@ -12,9 +12,21 @@ import Script from "next/script";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Haluland - Music & Movie News",
+  title: "Haluland - Music & Movie News | Entertainment, Reviews, Interviews",
   description:
-    "Your ultimate destination for music and movie entertainment news",
+    "Your ultimate destination for music and movie entertainment news, reviews, interviews, and trending stories.",
+  keywords: [
+    "music news",
+    "movie news",
+    "entertainment",
+    "celebrity",
+    "reviews",
+    "interviews",
+    "Haluland"
+  ],
+  alternates: {
+    canonical: "https://haluland.com",
+  },
   icons: {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
@@ -49,6 +61,22 @@ export const metadata: Metadata = {
     follow: true,
     nocache: false,
   },
+  other: {
+    // Expanded JSON-LD structured data for Organization
+    "application/ld+json": JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Haluland",
+      "url": "https://haluland.com",
+      "logo": "https://haluland.com/logo.png",
+      "sameAs": [
+        "https://www.facebook.com/haluland",
+        "https://twitter.com/haluland",
+        "https://instagram.com/haluland"
+      ],
+      "description": "Your ultimate destination for music and movie entertainment news, reviews, interviews, and trending stories."
+    })
+  },
 };
 
 export default function RootLayout({
@@ -59,20 +87,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
-        <Script
-          id="ld-json"
-          type="application/ld+json"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              name: "Haluland",
-              url: "https://haluland.com",
-              logo: "https://haluland.com/logo.png",
-            }),
-          }}
-        />
+        {/* JSON-LD structured data is now injected via metadata.other */}
         <Provider googleClientId={config.GOOGLE_CLIENT_ID || ""}>
           {children}
         </Provider>
