@@ -30,7 +30,7 @@ export function Footer() {
             <div className="flex items-center space-x-2">
               <Avatar className="h-10 w-10">
                 <AvatarImage
-                  src="https://res.cloudinary.com/dn3wcoghh/image/upload/w_1000,ar_1:1,c_fill,g_auto,e_art:hokusai/v1749364328/dev/haluland-media/internal/haluland-radius_irkr2b.png"
+                  src="https://res.cloudinary.com/dn3wcoghh/image/upload/c_thumb,w_200,g_face/v1758902034/dev/haluland-media/internal/haluland-icon_ent3h2.png"
                   alt="Haluland Logo"
                 />
                 <AvatarFallback>

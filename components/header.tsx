@@ -52,14 +52,9 @@ export function Header() {
           <Link href="/" className="flex items-center space-x-2">
             <Avatar className="h-8 w-8">
               <AvatarImage
-                src="https://res.cloudinary.com/dn3wcoghh/image/upload/w_1000,ar_1:1,c_fill,g_auto,e_art:hokusai/v1749364328/dev/haluland-media/internal/haluland-radius_irkr2b.png"
+                src="https://res.cloudinary.com/dn3wcoghh/image/upload/c_thumb,w_200,g_face/v1758902034/dev/haluland-media/internal/haluland-icon_ent3h2.png"
                 alt="Haluland Logo"
               />
-              <AvatarFallback>
-                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">H</span>
-                </div>
-              </AvatarFallback>
             </Avatar>
             <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               Haluland

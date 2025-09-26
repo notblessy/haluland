@@ -7,7 +7,7 @@ export interface ApiResponse<T> {
 export interface PaginatedResponse<T> {
   records: T[];
   page_summary: {
-    has_next: boolean;
+    hasNext: boolean;
     page: number;
     size: number;
     total: number;

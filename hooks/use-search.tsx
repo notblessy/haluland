@@ -55,7 +55,7 @@ export const useSearch = () => {
       setAccumulatedData((prev) => [...prev, ...data?.data?.records]);
     }
 
-    setHasNext(data?.data?.page_summary?.has_next);
+    setHasNext(data?.data?.page_summary?.hasNext);
   }, [data, page]);
 
   const onQuery = useCallback((props: QueryParams) => {
