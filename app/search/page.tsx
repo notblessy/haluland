@@ -19,6 +19,7 @@ import { Search, Filter, X } from "lucide-react";
 import { useSearch } from "@/hooks/use-search";
 import { useTagOptions } from "@/hooks/use-tags";
 import { useCategoryOptions } from "@/hooks/use-categories";
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -34,6 +35,13 @@ function SearchContent() {
 
   const { data: tagOptions } = useTagOptions();
   const { data: categoryOptions } = useCategoryOptions();
+
+  // Infinite scroll hook
+  const infiniteScrollRef = useInfiniteScroll({
+    hasNext,
+    loading: loadingMore,
+    onLoadMore: loadMore,
+  });
 
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -266,16 +274,24 @@ function SearchContent() {
                 <StoryCard key={story.id} story={story} />
               ))}
 
+              {/* Infinite scroll trigger */}
               {hasNext && (
-                <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center mt-8">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={loadMore}
-                    disabled={loadingMore}
-                  >
-                    {loadingMore ? "Loading..." : "Load More"}
-                  </Button>
+                <div
+                  ref={infiniteScrollRef}
+                  className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center py-8"
+                >
+                  {loadingMore ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                      <span className="text-muted-foreground">
+                        Loading more stories...
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="text-muted-foreground text-sm">
+                      Scroll down to load more
+                    </div>
+                  )}
                 </div>
               )}
             </div>
