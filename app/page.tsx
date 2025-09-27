@@ -164,19 +164,6 @@ function HomeContent() {
               </Link>
             </div>
           )}
-          
-          {hasNext && (
-            <div className="text-center mt-8">
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={loadMore}
-                disabled={loadingMore}
-              >
-                {loadingMore ? "Loading..." : "Load More"}
-              </Button>
-            </div>
-          )}
         </section>
 
         {/* Featured Categories */}
