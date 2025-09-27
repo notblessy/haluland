@@ -34,13 +34,17 @@ export function Footer() {
                   alt="Haluland Logo"
                 />
                 <AvatarFallback>
+                  å
                   <div className="h-10 w-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
                     <span className="text-white font-bold">H</span>
                   </div>
                 </AvatarFallback>
               </Avatar>
-              <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Haluland
+              <span
+                className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent whitespace-nowrap pr-5"
+                style={{ fontFamily: "Playwrite US Trad, cursive" }}
+              >
+                haluland
               </span>
             </div>
             <p className="text-gray-400">

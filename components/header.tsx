@@ -49,15 +49,18 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2 p-4">
             <Avatar className="h-8 w-8">
               <AvatarImage
                 src="https://res.cloudinary.com/dn3wcoghh/image/upload/c_thumb,w_200,g_face/v1758902034/dev/haluland-media/internal/haluland-icon_ent3h2.png"
                 alt="Haluland Logo"
               />
             </Avatar>
-            <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Haluland
+            <span
+              className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent whitespace-nowrap pr-5"
+              style={{ fontFamily: "Playwrite US Trad, cursive" }}
+            >
+              haluland
             </span>
           </Link>
 

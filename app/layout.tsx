@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     "celebrity",
     "reviews",
     "interviews",
-    "Haluland"
+    "Haluland",
   ],
   alternates: {
     canonical: "https://haluland.com",
@@ -66,16 +66,17 @@ export const metadata: Metadata = {
     "application/ld+json": JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Organization",
-      "name": "Haluland",
-      "url": "https://haluland.com",
-      "logo": "https://haluland.com/logo.png",
-      "sameAs": [
+      name: "Haluland",
+      url: "https://haluland.com",
+      logo: "https://haluland.com/logo.png",
+      sameAs: [
         "https://www.facebook.com/haluland",
         "https://twitter.com/haluland",
-        "https://instagram.com/haluland"
+        "https://instagram.com/haluland",
       ],
-      "description": "Your ultimate destination for music and movie entertainment news, reviews, interviews, and trending stories."
-    })
+      description:
+        "Your ultimate destination for music and movie entertainment news, reviews, interviews, and trending stories.",
+    }),
   },
 };
 
@@ -86,6 +87,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Playwrite+US+Trad:wght@100..400&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className={inter.className} suppressHydrationWarning>
         {/* JSON-LD structured data is now injected via metadata.other */}
         <Provider googleClientId={config.GOOGLE_CLIENT_ID || ""}>
