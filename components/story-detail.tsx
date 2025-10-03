@@ -12,12 +12,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { Heart, Share2 } from "lucide-react";
+import { Heart, Share2, Instagram } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { StoryType, useStory } from "@/hooks/use-story";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { useReactions } from "@/hooks/use-reactions";
+import { InstagramShareModal } from "@/components/instagram-share-modal";
 
 import Image from "next/image";
 
@@ -49,6 +50,7 @@ export default function StoryPage({
 
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [newComment, setNewComment] = useState("");
+  const [isInstagramModalOpen, setIsInstagramModalOpen] = useState(false);
 
   const handleLike = async () => {
     if (!user) {
@@ -229,6 +231,14 @@ export default function StoryPage({
                 <Button variant="outline" size="sm" onClick={handleShare}>
                   <Share2 className="h-4 w-4" />
                 </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setIsInstagramModalOpen(true)}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-none"
+                >
+                  <Instagram className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </header>
@@ -385,6 +395,13 @@ export default function StoryPage({
       </main>
 
       <Footer />
+      
+      {/* Instagram Share Modal */}
+      <InstagramShareModal 
+        story={story}
+        isOpen={isInstagramModalOpen}
+        onClose={() => setIsInstagramModalOpen(false)}
+      />
     </div>
   );
 }

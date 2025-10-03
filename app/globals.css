@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 @layer base {
+  img {
+    @apply inline-block;
+  }
+
+  body {
+    line-height: initial !important;
+  }
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
