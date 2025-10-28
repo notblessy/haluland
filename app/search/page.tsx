@@ -123,31 +123,35 @@ function SearchContent() {
     selectedCategory || selectedTags.length > 0 || searchQuery;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       <Header />
 
-      <main className="container mx-auto px-4 py-8 flex-grow">
+      <main className="container mx-auto px-4 py-12 flex-grow">
         {/* Search Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-4">Search Results</h1>
+        <div className="mb-12">
+          <h1 className="text-4xl md:text-5xl font-black uppercase mb-8">
+            Search Results
+          </h1>
 
           {/* Search Input */}
-          <div className="relative mb-6">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
+          <div className="relative mb-8">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5" />
+            <input
               type="search"
               placeholder="Search stories, authors, topics..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 text-lg h-12"
+              className="w-full pl-14 pr-4 py-4 text-lg font-bold border-4 border-black focus:outline-none focus:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all"
             />
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap items-center gap-4 mb-6">
-            <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Filters:</span>
+          <div className="flex flex-wrap items-center gap-4 mb-8">
+            <div className="flex items-center gap-3">
+              <div className="bg-black text-white p-2 border-4 border-black rotate-[-3deg]">
+                <Filter className="h-5 w-5" />
+              </div>
+              <span className="text-lg font-black uppercase">Filters:</span>
             </div>
 
             {/* Category Filter */}
@@ -155,15 +159,18 @@ function SearchContent() {
               value={selectedCategory}
               onValueChange={setSelectedCategory}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[200px] border-4 border-black font-bold h-12 bg-blue-200 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
+              <SelectContent className="border-4 border-black bg-white">
+                <SelectItem value="all" className="font-bold">
+                  All Categories
+                </SelectItem>
                 {categoryOptions?.map((category) => (
                   <SelectItem
                     key={category.value}
                     value={category.value.toString()}
+                    className="font-bold hover:bg-yellow-300"
                   >
                     {category.label}
                   </SelectItem>
@@ -176,67 +183,86 @@ function SearchContent() {
               value={sortBy}
               onValueChange={(value: "latest" | "popular") => setSortBy(value)}
             >
-              <SelectTrigger className="w-[140px]">
+              <SelectTrigger className="w-[160px] border-4 border-black font-bold h-12 bg-pink-200 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
                 <SelectValue
                   placeholder={sortBy === "latest" ? "Latest" : "Popular"}
                 />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="latest">Latest</SelectItem>
-                <SelectItem value="popular">Popular</SelectItem>
+              <SelectContent className="border-4 border-black bg-white">
+                <SelectItem
+                  value="latest"
+                  className="font-bold hover:bg-yellow-300"
+                >
+                  Latest
+                </SelectItem>
+                <SelectItem
+                  value="popular"
+                  className="font-bold hover:bg-yellow-300"
+                >
+                  Popular
+                </SelectItem>
               </SelectContent>
             </Select>
 
             {hasActiveFilters && (
-              <Button variant="outline" size="sm" onClick={clearFilters}>
-                <X className="h-4 w-4 mr-2" />
+              <button
+                onClick={clearFilters}
+                className="bg-red-300 text-black font-black uppercase px-4 py-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200 flex items-center gap-2"
+              >
+                <X className="h-4 w-4" />
                 Clear Filters
-              </Button>
+              </button>
             )}
           </div>
 
           {/* Tag Filters */}
-          <div className="mb-6">
-            <p className="text-sm font-medium mb-3">Filter by tags:</p>
-            <div className="flex flex-wrap gap-2">
+          <div className="mb-8">
+            <p className="text-lg font-black uppercase mb-4">Filter by tags:</p>
+            <div className="flex flex-wrap gap-3">
               {tagOptions?.map((tag) => (
-                <Badge
+                <button
                   key={tag.value}
-                  variant={
-                    selectedTags.includes(tag.value) ? "default" : "outline"
-                  }
-                  className="cursor-pointer hover:bg-primary/80 transition-colors"
                   onClick={() => handleTagToggle(tag.value)}
+                  className={`px-4 py-2 font-black uppercase text-sm border-4 border-black transition-all duration-200 ${
+                    selectedTags.includes(tag.value)
+                      ? "bg-black text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                      : "bg-green-200 text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]"
+                  }`}
                 >
                   {tag.label}
-                </Badge>
+                </button>
               ))}
             </div>
           </div>
 
           {/* Active Filters Display */}
           {hasActiveFilters && (
-            <div className="mb-6">
-              <p className="text-sm text-muted-foreground mb-2">
+            <div className="mb-8 p-6 bg-yellow-100 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              <p className="text-sm font-black uppercase mb-3">
                 Active filters:
               </p>
               <div className="flex flex-wrap gap-2">
                 {searchQuery && (
-                  <Badge variant="secondary">Query: "{searchQuery}"</Badge>
+                  <div className="bg-white border-2 border-black px-3 py-1 font-bold text-sm">
+                    Query: "{searchQuery}"
+                  </div>
                 )}
                 {selectedCategory && (
-                  <Badge variant="secondary">
+                  <div className="bg-white border-2 border-black px-3 py-1 font-bold text-sm">
                     Category:{" "}
                     {
                       categoryOptions.find((c) => c.slug === selectedCategory)
                         ?.label
                     }
-                  </Badge>
+                  </div>
                 )}
                 {selectedTags.map((tagId) => (
-                  <Badge key={tagId} variant="secondary">
+                  <div
+                    key={tagId}
+                    className="bg-white border-2 border-black px-3 py-1 font-bold text-sm"
+                  >
                     Tag: {tagOptions?.find((t) => t.value === tagId)?.label}
-                  </Badge>
+                  </div>
                 ))}
               </div>
             </div>
@@ -245,31 +271,31 @@ function SearchContent() {
 
         {/* Results */}
         <section>
-          <div className="flex items-center justify-between mb-6">
-            <p className="text-muted-foreground">
+          <div className="flex items-center justify-between mb-8">
+            <div className="bg-black text-white px-6 py-3 border-4 border-black font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               {loading
                 ? "Searching..."
                 : `Found ${stories?.records?.length} ${
                     stories?.records?.length === 1 ? "story" : "stories"
                   }`}
-            </p>
+            </div>
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="aspect-[4/3] bg-muted rounded-xl mb-4"></div>
+                <div key={i}>
+                  <div className="aspect-[4/3] bg-gray-200 border-4 border-black mb-4"></div>
                   <div className="space-y-3">
-                    <div className="h-6 bg-muted rounded w-3/4"></div>
-                    <div className="h-4 bg-muted rounded w-full"></div>
-                    <div className="h-4 bg-muted rounded w-1/2"></div>
+                    <div className="h-6 bg-gray-200 border-2 border-black w-3/4"></div>
+                    <div className="h-4 bg-gray-200 border-2 border-black w-full"></div>
+                    <div className="h-4 bg-gray-200 border-2 border-black w-1/2"></div>
                   </div>
                 </div>
               ))}
             </div>
           ) : stories?.records?.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {stories?.records?.map((story) => (
                 <StoryCard key={story.id} story={story} />
               ))}
@@ -281,14 +307,12 @@ function SearchContent() {
                   className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center py-8"
                 >
                   {loadingMore ? (
-                    <div className="flex items-center space-x-2">
-                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-                      <span className="text-muted-foreground">
-                        Loading more stories...
-                      </span>
+                    <div className="flex items-center gap-3 bg-yellow-300 border-4 border-black px-6 py-3 font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                      <div className="animate-spin h-6 w-6 border-4 border-black border-t-transparent"></div>
+                      <span>Loading more stories...</span>
                     </div>
                   ) : (
-                    <div className="text-muted-foreground text-sm">
+                    <div className="bg-gray-100 border-4 border-black px-6 py-3 font-bold">
                       Scroll down to load more
                     </div>
                   )}
@@ -296,17 +320,24 @@ function SearchContent() {
               )}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <div className="max-w-md mx-auto">
-                <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">No stories found</h3>
-                <p className="text-muted-foreground mb-4">
+            <div className="text-center py-16">
+              <div className="max-w-md mx-auto bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] p-12">
+                <div className="bg-blue-200 w-24 h-24 border-4 border-black mx-auto mb-6 flex items-center justify-center rotate-[-5deg]">
+                  <Search className="h-12 w-12" />
+                </div>
+                <h3 className="text-2xl font-black uppercase mb-3">
+                  No stories found
+                </h3>
+                <p className="font-bold mb-6">
                   Try adjusting your search terms or filters to find what you're
                   looking for.
                 </p>
-                <Button onClick={clearFilters} variant="outline">
+                <button
+                  onClick={clearFilters}
+                  className="bg-yellow-300 text-black font-black uppercase px-6 py-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
+                >
                   Clear all filters
-                </Button>
+                </button>
               </div>
             </div>
           )}

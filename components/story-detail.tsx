@@ -7,11 +7,6 @@ import { useParams } from "next/navigation";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/lib/auth-context";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { Heart, Share2, Instagram } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -143,12 +138,14 @@ export default function StoryPage({
 
   if (!story) {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="min-h-screen bg-white flex flex-col">
         <Header />
-        <div className="container mx-auto px-4 py-8 flex-grow">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-2xl font-bold mb-4">Story Not Found</h1>
-            <p className="text-muted-foreground">
+        <div className="container mx-auto px-4 py-16 flex-grow">
+          <div className="max-w-2xl mx-auto text-center bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] p-12">
+            <h1 className="text-3xl font-black uppercase mb-4">
+              Story Not Found
+            </h1>
+            <p className="font-bold">
               The story you're looking for doesn't exist or has been removed.
             </p>
           </div>
@@ -159,45 +156,52 @@ export default function StoryPage({
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       <Header />
 
-      <main className="max-w-3xl mx-auto px-4 py-8 flex-grow">
-        <article className="max-w-4xl mx-auto">
+      <main className="max-w-4xl mx-auto px-4 py-12 flex-grow">
+        <article>
           {/* Story Header */}
-          <header className="mb-8">
-            <div className="flex flex-wrap items-center gap-2 mb-4">
+          <header className="mb-10">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
               {story.category && (
-                <Badge variant="secondary">{story.category.name}</Badge>
+                <div className="bg-yellow-300 border-4 border-black text-black font-black uppercase px-4 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                  {story.category.name}
+                </div>
               )}
               {story.tags?.map((tag) => (
-                <Badge key={tag.id} variant="outline">
+                <div
+                  key={tag.id}
+                  className="bg-blue-200 border-2 border-black text-black font-bold px-3 py-1 text-sm"
+                >
                   {tag.name}
-                </Badge>
+                </div>
               ))}
             </div>
 
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-8 uppercase">
               {story.title}
             </h1>
 
-            <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between flex-wrap gap-6 mb-8 p-6 bg-gray-50 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <div className="flex items-center gap-4">
                 {story.author && (
-                  <div className="flex items-center space-x-3">
-                    <Avatar>
-                      <AvatarImage
-                        src={story.author.picture || undefined}
-                        className="rounded-full"
-                      />
-                      <AvatarFallback>
-                        {story.author.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 border-4 border-black bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center font-black text-xl">
+                      {story.author.picture ? (
+                        <img
+                          src={story.author.picture}
+                          alt={story.author.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        story.author.name.charAt(0).toUpperCase()
+                      )}
+                    </div>
                     <div>
-                      <p className="font-medium">{story.author.name}</p>
+                      <p className="font-black text-lg">{story.author.name}</p>
                       {story.published_at && (
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm font-bold">
                           {formatDistanceToNow(new Date(story.published_at), {
                             addSuffix: true,
                           })}
@@ -208,52 +212,55 @@ export default function StoryPage({
                 )}
               </div>
 
-              <div className="flex items-center space-x-4">
-                <Button
-                  variant={story?.is_liked ? "default" : "outline"}
-                  size="sm"
+              <div className="flex items-center gap-3">
+                <button
                   onClick={handleLike}
-                  className="flex items-center space-x-2"
+                  className={`px-4 py-2 font-black uppercase text-sm border-4 border-black transition-all duration-200 flex items-center gap-2 ${
+                    story?.is_liked
+                      ? "bg-red-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                      : "bg-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]"
+                  }`}
                 >
                   {reactionLoading ? (
-                    <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+                    <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent" />
                   ) : (
-                    <>
-                      <Heart
-                        className={`h-4 w-4 ${
-                          story?.is_liked ? "fill-current" : ""
-                        }`}
-                      />
-                    </>
+                    <Heart
+                      className={`h-4 w-4 ${
+                        story?.is_liked ? "fill-current" : ""
+                      }`}
+                    />
                   )}
                   <span>{story?.total_likes}</span>
-                </Button>
-                <Button variant="outline" size="sm" onClick={handleShare}>
+                </button>
+                <button
+                  onClick={handleShare}
+                  className="bg-blue-300 text-black px-4 py-2 font-black uppercase text-sm border-4 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
+                >
                   <Share2 className="h-4 w-4" />
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                </button>
+                <button
                   onClick={() => setIsInstagramModalOpen(true)}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-none"
+                  className="bg-gradient-to-r from-purple-400 to-pink-400 text-white px-4 py-2 font-black uppercase text-sm border-4 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
                 >
                   <Instagram className="h-4 w-4" />
-                </Button>
+                </button>
               </div>
             </div>
           </header>
 
           {/* Featured Image */}
-          <div className="mb-8">
-            <Image
-              src={story.thumbnail || "/placeholder.svg"}
-              alt={story.thumbnail_alt as string}
-              width={800}
-              height={450}
-              className="w-full aspect-[16/9] object-cover rounded-xl"
-            />
+          <div className="mb-10">
+            <div className="border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+              <Image
+                src={story.thumbnail || "/placeholder.svg"}
+                alt={story.thumbnail_alt as string}
+                width={800}
+                height={450}
+                className="w-full aspect-[16/9] object-cover"
+              />
+            </div>
             {story.thumbnail_alt && (
-              <p className="text-sm italic text-muted-foreground mt-2">
+              <p className="text-sm font-bold mt-3 pl-2">
                 {story.thumbnail_alt}
               </p>
             )}
@@ -267,53 +274,61 @@ export default function StoryPage({
             </div>
           </div>
 
-          <Separator className="my-8" />
+          <div className="my-10 border-t-4 border-black"></div>
 
           {/* Comments Section */}
           <section>
-            <h2 className="text-2xl font-bold mb-6">
-              Comments ({story?.comments?.length})
-            </h2>
+            <div className="bg-purple-200 border-4 border-black px-6 py-3 inline-block mb-8 font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <h2 className="text-2xl">Comments ({story?.comments?.length})</h2>
+            </div>
 
             {/* Add Comment Form */}
             {user ? (
-              <form onSubmit={handleComment} className="mb-8">
-                <div className="flex space-x-4">
-                  <Avatar>
-                    <AvatarImage src={user.picture || undefined} />
-                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <Textarea
-                      placeholder="Write a comment..."
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      className="mb-3"
-                    />
-                    <Button
-                      type="submit"
-                      variant="default"
-                      disabled={!newComment.trim() || reactionCommentLoading}
-                    >
-                      {reactionCommentLoading && (
-                        <span className="absolute animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+              <form onSubmit={handleComment} className="mb-10">
+                <div className="bg-gray-50 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-6">
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 border-4 border-black bg-gradient-to-br from-blue-300 to-purple-300 flex items-center justify-center font-black text-lg flex-shrink-0">
+                      {user.picture ? (
+                        <img
+                          src={user.picture}
+                          alt={user.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        user.name.charAt(0).toUpperCase()
                       )}
-                      <span
-                        className={
-                          reactionCommentLoading ? "invisible" : "visible"
-                        }
+                    </div>
+                    <div className="flex-1">
+                      <textarea
+                        placeholder="Write a comment..."
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        className="w-full px-4 py-3 border-4 border-black font-bold mb-4 focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+                        rows={3}
+                      />
+                      <button
+                        type="submit"
+                        disabled={!newComment.trim() || reactionCommentLoading}
+                        className="bg-yellow-300 text-black font-black uppercase px-6 py-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        Post Comment
-                      </span>
-                    </Button>
+                        {reactionCommentLoading ? (
+                          <span className="flex items-center gap-2">
+                            <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent"></span>
+                            Posting...
+                          </span>
+                        ) : (
+                          "Post Comment"
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </form>
             ) : (
-              <div className="mb-8 p-4 border rounded-lg text-center">
-                <p className="text-muted-foreground">
+              <div className="mb-10 p-8 border-4 border-black bg-yellow-100 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                <p className="font-bold text-lg">
                   Please{" "}
-                  <a href="/login" className="text-primary hover:underline">
+                  <a href="/login" className="underline hover:text-blue-600">
                     login
                   </a>{" "}
                   to comment on this story.
@@ -324,49 +339,55 @@ export default function StoryPage({
             {/* Comments List */}
             <div className="space-y-6">
               {story?.comments?.map((comment) => (
-                <div key={comment.id} className="flex space-x-4">
-                  <Avatar>
-                    <AvatarImage src={comment.user?.picture || undefined} />
-                    <AvatarFallback>
-                      {comment.user?.name?.charAt(0) || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <div className="flex justify-between">
-                      <div className="flex flex-col">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <span className="font-medium">
-                            {comment.user?.name || "Anonymous"}
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {formatDistanceToNow(new Date(comment.created_at), {
-                              addSuffix: true,
-                            })}
-                          </span>
+                <div
+                  key={comment.id}
+                  className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6"
+                >
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 border-4 border-black bg-gradient-to-br from-green-300 to-blue-300 flex items-center justify-center font-black text-lg flex-shrink-0">
+                      {comment.user?.picture ? (
+                        <img
+                          src={comment.user.picture}
+                          alt={comment.user.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        comment.user?.name?.charAt(0).toUpperCase() || "U"
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-3">
+                            <span className="font-black text-lg">
+                              {comment.user?.name || "Anonymous"}
+                            </span>
+                            <span className="text-xs font-bold bg-gray-100 border-2 border-black px-2 py-1">
+                              {formatDistanceToNow(
+                                new Date(comment.created_at),
+                                {
+                                  addSuffix: true,
+                                }
+                              )}
+                            </span>
+                          </div>
+                          <p className="font-bold">{comment.content}</p>
                         </div>
-                        <p className="text-muted-foreground">
-                          {comment.content}
-                        </p>
-                      </div>
-                      {user?.id === comment.user?.id && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-muted-foreground hover:text-destructive"
-                          onClick={() => handleDeleteComment(comment.id)}
-                        >
-                          {reactionDeleteCommentLoading &&
-                          comment?.id === deletingId ? (
-                            <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
-                          ) : (
-                            <>
-                              <span className="sr-only">Delete Comment</span>
+                        {user?.id === comment.user?.id && (
+                          <button
+                            onClick={() => handleDeleteComment(comment.id)}
+                            className="bg-red-300 text-black p-2 border-4 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
+                          >
+                            {reactionDeleteCommentLoading &&
+                            comment?.id === deletingId ? (
+                              <span className="animate-spin h-4 w-4 border-2 border-current border-t-transparent block" />
+                            ) : (
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-4 w-4"
                                 fill="none"
                                 viewBox="0 0 24 24"
-                                strokeWidth={2}
+                                strokeWidth={3}
                                 stroke="currentColor"
                               >
                                 <path
@@ -375,19 +396,21 @@ export default function StoryPage({
                                   d="M6 18L18 6M6 6l12 12"
                                 />
                               </svg>
-                            </>
-                          )}
-                        </Button>
-                      )}
+                            )}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
 
               {story?.comments?.length === 0 && (
-                <p className="text-center text-muted-foreground py-8">
-                  No comments yet. Be the first to comment!
-                </p>
+                <div className="text-center py-12 bg-white border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                  <p className="font-bold text-lg">
+                    No comments yet. Be the first to comment!
+                  </p>
+                </div>
               )}
             </div>
           </section>
@@ -395,9 +418,9 @@ export default function StoryPage({
       </main>
 
       <Footer />
-      
+
       {/* Instagram Share Modal */}
-      <InstagramShareModal 
+      <InstagramShareModal
         story={story}
         isOpen={isInstagramModalOpen}
         onClose={() => setIsInstagramModalOpen(false)}

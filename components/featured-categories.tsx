@@ -1,7 +1,5 @@
-import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Music, Film, Tv, Star, Award, Headphones } from "lucide-react"
+import Link from "next/link";
+import { Music, Film, Tv, Star, Award, Headphones } from "lucide-react";
 
 const featuredCategories = [
   {
@@ -9,7 +7,7 @@ const featuredCategories = [
     slug: "music",
     icon: Music,
     description: "Latest hits, artist news, and album reviews",
-    color: "from-blue-500 to-purple-600",
+    bgColor: "bg-blue-300",
     storyCount: 156,
   },
   {
@@ -17,7 +15,7 @@ const featuredCategories = [
     slug: "movies",
     icon: Film,
     description: "Box office updates, reviews, and behind-the-scenes",
-    color: "from-red-500 to-pink-600",
+    bgColor: "bg-pink-300",
     storyCount: 142,
   },
   {
@@ -25,7 +23,7 @@ const featuredCategories = [
     slug: "tv-shows",
     icon: Tv,
     description: "Series reviews, streaming news, and episode guides",
-    color: "from-green-500 to-teal-600",
+    bgColor: "bg-green-300",
     storyCount: 98,
   },
   {
@@ -33,7 +31,7 @@ const featuredCategories = [
     slug: "celebrity-news",
     icon: Star,
     description: "Red carpet events, interviews, and lifestyle updates",
-    color: "from-yellow-500 to-orange-600",
+    bgColor: "bg-yellow-300",
     storyCount: 203,
   },
   {
@@ -41,7 +39,7 @@ const featuredCategories = [
     slug: "awards",
     icon: Award,
     description: "Award shows, nominations, and winner predictions",
-    color: "from-purple-500 to-indigo-600",
+    bgColor: "bg-purple-300",
     storyCount: 67,
   },
   {
@@ -49,50 +47,53 @@ const featuredCategories = [
     slug: "podcasts",
     icon: Headphones,
     description: "Entertainment podcasts and audio content",
-    color: "from-pink-500 to-rose-600",
+    bgColor: "bg-orange-300",
     storyCount: 34,
   },
-]
+];
 
 export function FeaturedCategories() {
   return (
     <section className="py-12">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold mb-4">Explore by Category</h2>
-        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Dive deep into your favorite entertainment topics with our comprehensive coverage
+      <div className="text-center mb-10">
+        <h2 className="text-4xl md:text-5xl font-black uppercase mb-4">
+          Explore by Category
+        </h2>
+        <p className="text-lg font-bold max-w-2xl mx-auto">
+          Dive deep into your favorite entertainment topics with our
+          comprehensive coverage
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {featuredCategories.map((category) => {
-          const IconComponent = category.icon
+          const IconComponent = category.icon;
           return (
             <Link key={category.slug} href={`/?category=${category.slug}`}>
-              <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <CardContent className="p-6">
-                  <div
-                    className={`w-12 h-12 rounded-lg bg-gradient-to-r ${category.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
-                  >
-                    <IconComponent className="h-6 w-6 text-white" />
-                  </div>
+              <div
+                className={`${category.bgColor} border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all duration-200 p-6 group`}
+              >
+                <div className="w-16 h-16 bg-black border-4 border-black flex items-center justify-center mb-4 rotate-[-5deg] group-hover:rotate-[5deg] transition-transform">
+                  <IconComponent className="h-8 w-8 text-white" />
+                </div>
 
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
-                      {category.name}
-                    </h3>
-                    <Badge variant="secondary" className="text-xs">
-                      {category.storyCount} stories
-                    </Badge>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-2xl font-black uppercase">
+                    {category.name}
+                  </h3>
+                  <div className="bg-black text-white border-2 border-black px-3 py-1 text-xs font-black uppercase">
+                    {category.storyCount}
                   </div>
+                </div>
 
-                  <p className="text-sm text-muted-foreground leading-relaxed">{category.description}</p>
-                </CardContent>
-              </Card>
+                <p className="text-sm font-bold leading-relaxed">
+                  {category.description}
+                </p>
+              </div>
             </Link>
-          )
+          );
         })}
       </div>
     </section>
-  )
+  );
 }

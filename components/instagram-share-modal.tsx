@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Download, Loader2 } from "lucide-react";
+import { Download, Loader2, X } from "lucide-react";
 import { StoryType } from "@/hooks/use-story";
 import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
@@ -36,8 +36,8 @@ const InstagramStoryPreview = React.forwardRef<
       style={{
         width: "324px",
         height: "576px",
-        background:
-          "linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #06B6D4 100%)",
+        background: "#FBBF24",
+        border: "8px solid #000000",
         borderRadius: "0px",
         overflow: "hidden",
         margin: "0",
@@ -48,28 +48,34 @@ const InstagramStoryPreview = React.forwardRef<
         position: "relative",
         fontFamily: "system-ui, -apple-system, sans-serif",
         boxSizing: "border-box",
+        boxShadow: "12px 12px 0px 0px rgba(0, 0, 0, 1)",
       }}
     >
-      {/* Background Overlays */}
+      {/* Decorative Background Shapes */}
       <div
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(0, 0, 0, 0.2)",
+          top: "40px",
+          right: "20px",
+          width: "60px",
+          height: "60px",
+          background: "#EC4899",
+          border: "4px solid #000000",
+          transform: "rotate(15deg)",
+          zIndex: "1",
         }}
       />
       <div
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background:
-            "linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 50%, rgba(0, 0, 0, 0.2) 100%)",
+          bottom: "160px",
+          left: "20px",
+          width: "40px",
+          height: "40px",
+          background: "#3B82F6",
+          border: "4px solid #000000",
+          transform: "rotate(-20deg)",
+          zIndex: "1",
         }}
       />
 
@@ -77,7 +83,7 @@ const InstagramStoryPreview = React.forwardRef<
       <div
         style={{
           position: "relative",
-          zIndex: "999999",
+          zIndex: "100",
           transform: "translateZ(0)",
           display: "flex",
           justifyContent: "flex-start",
@@ -89,40 +95,61 @@ const InstagramStoryPreview = React.forwardRef<
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "8px",
+            gap: "4px",
             height: "100%",
           }}
         >
-          <div className="flex items-center justify-center">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "32px",
+              height: "32px",
+              background: "#FFFFFF",
+              border: "4px solid #000000",
+              boxShadow: "4px 4px 0px 0px rgba(0, 0, 0, 1)",
+            }}
+          >
             <img
               src="/logo.png"
               alt="Haluland"
               style={{
-                width: "20px",
-                height: "20px",
-                borderRadius: "50%",
+                width: "24px",
+                height: "24px",
+                objectFit: "contain",
               }}
               crossOrigin="anonymous"
             />
           </div>
-          <span className="text-xs uppercase text-white py-1 font-bold">
+          <span
+            style={{
+              fontSize: "12px",
+              textTransform: "uppercase",
+              color: "#000000",
+              fontWeight: "900",
+              letterSpacing: "0.5px",
+              marginLeft: "8px",
+            }}
+          >
             HALULAND
           </span>
         </div>
       </div>
 
       {/* Story Image with Floating Title and Category */}
-      <div style={{ position: "relative", flexShrink: 0 }}>
+      <div style={{ position: "relative", flexShrink: 0, zIndex: 100 }}>
         <div
           style={{
             position: "relative",
-            width: "280px",
-            height: "280px",
+            width: "240px",
+            height: "180px",
             margin: "0 auto",
-            borderRadius: "16px",
+            borderRadius: "0px",
             overflow: "hidden",
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.3)",
-            border: "2px solid rgba(255, 255, 255, 0.3)",
+            boxShadow: "8px 8px 0px 0px rgba(0, 0, 0, 1)",
+            border: "6px solid #000000",
+            background: "#FFFFFF",
           }}
         >
           <div
@@ -135,18 +162,6 @@ const InstagramStoryPreview = React.forwardRef<
               backgroundRepeat: "no-repeat",
             }}
           />
-          {/* Dark overlay for text readability */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background:
-                "linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.2) 100%)",
-            }}
-          />
 
           {/* Category Badge on Image */}
           {story.category && (
@@ -155,46 +170,64 @@ const InstagramStoryPreview = React.forwardRef<
                 position: "absolute",
                 top: "12px",
                 left: "12px",
-                zIndex: "999999",
+                zIndex: "1000",
                 transform: "translateZ(0)",
               }}
             >
-              <div className="flex flex-row items-center justify-center">
-                <span className="text-[10px] uppercase bg-white py-1 px-3 rounded-full border border-gray-50 shadow-md">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "10px",
+                    textTransform: "uppercase",
+                    background: "#FBBF24",
+                    padding: "4px 12px",
+                    border: "3px solid #000000",
+                    fontWeight: "900",
+                    boxShadow: "3px 3px 0px 0px rgba(0, 0, 0, 1)",
+                  }}
+                >
                   {story.category.name}
                 </span>
               </div>
             </div>
           )}
+        </div>
 
-          {/* Title Floating on Image */}
-          <div
+        {/* Title Below Image */}
+        <div
+          style={{
+            marginTop: "16px",
+            background: "#FFFFFF",
+            border: "4px solid #000000",
+            padding: "12px",
+            boxShadow: "6px 6px 0px 0px rgba(0, 0, 0, 1)",
+          }}
+        >
+          <h2
             style={{
-              position: "absolute",
-              bottom: "16px",
-              left: "16px",
-              right: "16px",
-              zIndex: "999998",
-              transform: "translateZ(0)",
+              fontSize: "10px",
+              fontWeight: "900",
+              color: "#000000",
+              margin: "0",
+              padding: "0",
+              textAlign: "left",
+              fontFamily: "Arial, Helvetica, sans-serif",
+              display: "block",
+              width: "100%",
+              textTransform: "uppercase",
+              lineHeight: "1.4",
+              wordWrap: "break-word",
+              overflowWrap: "break-word",
             }}
           >
-            <h2
-              style={{
-                fontSize: "16px",
-                fontWeight: "bold",
-                color: "#FFFFFF",
-                textShadow: "0 2px 4px rgba(0, 0, 0, 0.8)",
-                margin: "0",
-                padding: "0",
-                textAlign: "left",
-                fontFamily: "Arial, Helvetica, sans-serif",
-                display: "block",
-                width: "100%",
-              }}
-            >
-              {truncateText(story.title, 65)}
-            </h2>
-          </div>
+            {story.title}
+          </h2>
         </div>
       </div>
 
@@ -202,33 +235,31 @@ const InstagramStoryPreview = React.forwardRef<
       <div
         style={{
           position: "relative",
-          zIndex: "999997",
+          zIndex: "100",
           transform: "translateZ(0)",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          padding: "0 20px",
           marginTop: "12px",
           marginBottom: "12px",
-          minHeight: "40px",
+          padding: "0 8px",
         }}
       >
         <p
           style={{
-            color: "#FFFFFF",
+            color: "#000000",
             lineHeight: "1.5",
-            textShadow: "0 1px 3px rgba(0, 0, 0, 0.7)",
-            fontSize: "12px",
+            fontSize: "11px",
             margin: "0",
             padding: "0",
-            fontWeight: "normal",
+            fontWeight: "700",
             fontFamily: "Arial, Helvetica, sans-serif",
             textAlign: "center",
             display: "block",
             width: "100%",
           }}
         >
-          {truncateText(story.excerpt || "", 85)}
+          {truncateText(story.excerpt || "", 80)}
         </p>
       </div>
 
@@ -236,60 +267,41 @@ const InstagramStoryPreview = React.forwardRef<
       <div
         style={{
           position: "relative",
-          zIndex: "999996",
+          zIndex: "100",
           transform: "translateZ(0)",
         }}
       >
-        <div className="text-center">
-          <p className="text-[10px] text-white bg-white/10 px-2 py-1 rounded-full border border-white/20 shadow-sm">
-            📖 Read full story on haluland.com
+        <div style={{ textAlign: "center" }}>
+          <p
+            style={{
+              fontSize: "10px",
+              color: "#000000",
+              background: "#FFFFFF",
+              padding: "6px 12px",
+              border: "3px solid #000000",
+              fontWeight: "900",
+              textTransform: "uppercase",
+              display: "inline-block",
+              boxShadow: "3px 3px 0px 0px rgba(0, 0, 0, 1)",
+            }}
+          >
+            📖 haluland.com
           </p>
         </div>
       </div>
 
-      {/* Decorative Elements */}
+      {/* Additional Decorative Shape */}
       <div
         style={{
           position: "absolute",
-          top: "64px",
-          right: "16px",
-          width: "4px",
-          height: "4px",
-          backgroundColor: "rgba(255, 255, 255, 0.3)",
-          borderRadius: "50%",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "128px",
-          right: "24px",
-          width: "8px",
-          height: "8px",
-          backgroundColor: "rgba(255, 255, 255, 0.25)",
-          borderRadius: "50%",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: "80px",
-          left: "16px",
-          width: "4px",
-          height: "4px",
-          backgroundColor: "rgba(255, 255, 255, 0.2)",
-          borderRadius: "50%",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "112px",
-          left: "24px",
-          width: "4px",
-          height: "4px",
-          backgroundColor: "rgba(255, 255, 255, 0.3)",
-          borderRadius: "50%",
+          top: "120px",
+          right: "30px",
+          width: "30px",
+          height: "30px",
+          background: "#10B981",
+          border: "4px solid #000000",
+          transform: "rotate(45deg)",
+          zIndex: "1",
         }}
       />
     </div>
@@ -371,6 +383,9 @@ export function InstagramShareModal({
             title: "Story Downloaded!",
             description: "Your Instagram story has been saved to your device.",
           });
+
+          // Close modal after successful download
+          onClose();
         },
         "image/png",
         1.0
@@ -390,37 +405,51 @@ export function InstagramShareModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md p-0 bg-transparent border-none">
-        <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="text-center text-white">
+      <DialogContent className="max-w-md bg-white border-4 border-black shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] p-0 max-h-[95vh] flex flex-col">
+        <DialogHeader className="p-6 pb-4 border-b-4 border-black bg-yellow-300 relative flex-shrink-0">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-10 h-10 bg-black text-white border-4 border-black hover:bg-red-500 flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <DialogTitle className="text-center text-black text-2xl font-black uppercase">
             Instagram Story
           </DialogTitle>
         </DialogHeader>
 
-        <div className="p-6">
+        <div className="p-6 bg-white overflow-y-auto flex-1">
           {/* Instagram Story Preview */}
-          <div className="flex justify-center">
+          <div className="flex justify-center mb-6">
             <InstagramStoryPreview ref={storyRef} story={story} />
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-6 space-y-3">
-            <Button
+          <div className="space-y-3">
+            <button
               onClick={handleDownload}
               disabled={isGenerating}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-none shadow-lg"
+              className="w-full bg-black text-white font-black uppercase px-6 py-4 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isGenerating ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                <>
+                  <div className="h-5 w-5 border-4 border-white border-t-transparent animate-spin" />
+                  Generating...
+                </>
               ) : (
-                <Download className="h-4 w-4 mr-2" />
+                <>
+                  <Download className="h-5 w-5" />
+                  Download Story
+                </>
               )}
-              {isGenerating ? "Generating..." : "Download Story"}
-            </Button>
+            </button>
 
-            <Button variant="outline" onClick={onClose} className="w-full">
+            <button
+              onClick={onClose}
+              className="w-full bg-white text-black font-black uppercase px-6 py-4 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
+            >
               Close
-            </Button>
+            </button>
           </div>
         </div>
       </DialogContent>
