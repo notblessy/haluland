@@ -15,39 +15,24 @@ export function InstagramStoryImage({ story }: InstagramStoryImageProps) {
   return (
     <div
       style={{
-        width: '324px',
-        height: '576px',
-        background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #06B6D4 100%)',
-        borderRadius: '0px',
+        width: '1080px',
+        height: '1920px',
+        background: '#F5F1E8',
+        borderRadius: '6px',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '24px',
+        padding: '67px',
         position: 'relative',
         boxSizing: 'border-box',
-        fontFamily: 'Arial, sans-serif',
+        fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
         lineHeight: 'normal',
-        letterSpacing: 'normal'
+        letterSpacing: '-0.02em',
+        border: '3px solid rgba(196, 181, 160, 0.4)'
       }}
     >
-      {/* Background Overlays */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'rgba(0, 0, 0, 0.2)'
-      }} />
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 50%, rgba(0, 0, 0, 0.2) 100%)'
-      }} />
+      {/* Background Overlays - removed for minimalist design */}
       
       {/* Haluland Logo - Top Corner */}
       <div style={{
@@ -57,58 +42,50 @@ export function InstagramStoryImage({ story }: InstagramStoryImageProps) {
         justifyContent: 'space-between',
         alignItems: 'flex-start'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <div style={{
-            width: '28px',
-            height: '28px',
+            width: '80px',
+            height: '80px',
             backgroundColor: 'white',
-            borderRadius: '50%',
+            borderRadius: '6px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+            border: '3px solid rgba(196, 181, 160, 0.4)'
           }}>
             <img
               src="/logo.png"
               alt="Haluland"
               style={{
-                width: '20px',
-                height: '20px',
-                borderRadius: '50%'
+                width: '60px',
+                height: '60px',
+                objectFit: 'contain'
               }}
             />
           </div>
           <span style={{
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: '11px',
-            textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
+            color: '#3D3529',
+            fontWeight: '600',
+            fontSize: '33px',
             margin: 0,
             padding: 0,
             lineHeight: 1,
-            letterSpacing: '0.5px'
-          }}>HALULAND</span>
+            letterSpacing: '-0.02em'
+          }}>haluland</span>
         </div>
-        {/* Decorative dot */}
-        <div style={{
-          width: '8px',
-          height: '8px',
-          backgroundColor: 'rgba(255, 255, 255, 0.4)',
-          borderRadius: '50%'
-        }} />
       </div>
 
       {/* Story Image with Floating Title and Category */}
       <div style={{ position: 'relative', flexShrink: 0 }}>
         <div style={{
           position: 'relative',
-          width: '280px',
-          height: '280px',
+          width: '933px',
+          height: '933px',
           margin: '0 auto',
-          borderRadius: '16px',
+          borderRadius: '6px',
           overflow: 'hidden',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.3)',
-          border: '2px solid rgba(255, 255, 255, 0.3)'
+          boxShadow: '0 3px 10px rgba(0, 0, 0, 0.1)',
+          border: '3px solid rgba(196, 181, 160, 0.4)'
         }}>
           <img
             src={story.thumbnail || "/placeholder.svg"}
@@ -120,44 +97,41 @@ export function InstagramStoryImage({ story }: InstagramStoryImageProps) {
               objectPosition: 'center'
             }}
           />
-          {/* Dark overlay for text readability */}
+          {/* Light overlay for text readability */}
           <div style={{
             position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.2) 100%)'
+            background: 'linear-gradient(to top, rgba(245, 241, 232, 0.8) 0%, transparent 60%, rgba(245, 241, 232, 0.3) 100%)'
           }} />
           
           {/* Category Badge on Image */}
           {story.category && (
             <div style={{
               position: 'absolute',
-              top: '12px',
-              left: '12px',
+              top: '40px',
+              left: '40px',
               zIndex: 1000
             }}>
               <div style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                padding: '6px 12px',
-                borderRadius: '20px',
-                border: '1px solid rgba(255, 255, 255, 0.8)',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                backdropFilter: 'blur(10px)',
-                minHeight: '20px'
+                backgroundColor: '#6B8E5A',
+                padding: '13px 27px',
+                borderRadius: '6px',
+                border: '3px solid #6B8E5A',
+                minHeight: '60px'
               }}>
                 <span style={{
-                  fontFamily: 'Arial, sans-serif',
+                  fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
                   fontWeight: '600',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.8px',
+                  letterSpacing: '-0.02em',
                   lineHeight: '1',
-                  fontSize: '9px',
-                  color: '#1F2937',
+                  fontSize: '30px',
+                  color: '#FFFFFF',
                   margin: 0,
                   padding: 0
                 }}>{story.category.name}</span>
@@ -168,20 +142,19 @@ export function InstagramStoryImage({ story }: InstagramStoryImageProps) {
           {/* Title Floating on Image */}
           <div style={{
             position: 'absolute',
-            bottom: '20px',
-            left: '16px',
-            right: '16px'
+            bottom: '67px',
+            left: '53px',
+            right: '53px'
           }}>
             <h2 style={{
-              fontSize: '16px',
-              fontWeight: '700',
+              fontSize: '47px',
+              fontWeight: '600',
               lineHeight: '1.3',
-              color: '#FFFFFF',
-              textShadow: '0 4px 8px rgba(0, 0, 0, 0.7), 0 2px 4px rgba(0, 0, 0, 0.5)',
+              color: '#3D3529',
               margin: 0,
               padding: 0,
               textAlign: 'left',
-              letterSpacing: 'normal'
+              letterSpacing: '-0.02em'
             }}>
               {truncateText(story.title, 65)}
             </h2>
@@ -194,19 +167,19 @@ export function InstagramStoryImage({ story }: InstagramStoryImageProps) {
         position: 'relative',
         color: 'white',
         textAlign: 'center',
-        padding: '0 20px',
-        marginTop: '8px',
-        marginBottom: '8px'
+        padding: '0 67px',
+        marginTop: '27px',
+        marginBottom: '27px'
       }}>
         <p style={{
-          opacity: 0.95,
+          opacity: 0.9,
           lineHeight: '1.6',
-          textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
-          fontSize: '12px',
+          fontSize: '37px',
           margin: 0,
           padding: 0,
           fontWeight: '400',
-          letterSpacing: 'normal'
+          color: '#5A4A3A',
+          letterSpacing: '-0.02em'
         }}>
           {truncateText(story.excerpt || "", 85)}
         </p>
@@ -215,26 +188,24 @@ export function InstagramStoryImage({ story }: InstagramStoryImageProps) {
       {/* Bottom Link */}
       <div style={{ position: 'relative' }}>
         <div style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.2)',
-          backdropFilter: 'blur(8px)',
-          borderRadius: '28px',
-          padding: '12px 20px',
-          border: '1px solid rgba(255, 255, 255, 0.3)',
+          backgroundColor: '#FFFFFF',
+          borderRadius: '6px',
+          padding: '27px 53px',
+          border: '3px solid rgba(196, 181, 160, 0.4)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+          boxShadow: '0 3px 10px rgba(0, 0, 0, 0.1)'
         }}>
           <p style={{
-            color: 'white',
+            color: '#3D3529',
             fontWeight: '600',
             textAlign: 'center',
-            fontSize: '11px',
+            fontSize: '33px',
             margin: 0,
             padding: 0,
-            textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
             lineHeight: 1,
-            letterSpacing: 'normal'
+            letterSpacing: '-0.02em'
           }}>
             📖 Read full story on haluland.com
           </p>
@@ -244,39 +215,39 @@ export function InstagramStoryImage({ story }: InstagramStoryImageProps) {
       {/* Decorative Elements */}
       <div style={{
         position: 'absolute',
-        top: '64px',
-        right: '16px',
-        width: '4px',
-        height: '4px',
-        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-        borderRadius: '50%'
+        top: '213px',
+        right: '53px',
+        width: '20px',
+        height: '20px',
+        backgroundColor: '#E8DDD4',
+        borderRadius: '6px'
       }} />
       <div style={{
         position: 'absolute',
-        bottom: '128px',
-        right: '24px',
-        width: '8px',
-        height: '8px',
-        backgroundColor: 'rgba(255, 255, 255, 0.25)',
-        borderRadius: '50%'
+        bottom: '427px',
+        right: '80px',
+        width: '27px',
+        height: '27px',
+        backgroundColor: '#D4A574',
+        borderRadius: '6px'
       }} />
       <div style={{
         position: 'absolute',
-        top: '80px',
-        left: '16px',
-        width: '4px',
-        height: '4px',
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        borderRadius: '50%'
+        top: '267px',
+        left: '53px',
+        width: '20px',
+        height: '20px',
+        backgroundColor: '#A8C5A0',
+        borderRadius: '6px'
       }} />
       <div style={{
         position: 'absolute',
-        bottom: '112px',
-        left: '24px',
-        width: '4px',
-        height: '4px',
-        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-        borderRadius: '50%'
+        bottom: '373px',
+        left: '80px',
+        width: '20px',
+        height: '20px',
+        backgroundColor: '#C4B5A0',
+        borderRadius: '6px'
       }} />
     </div>
   );

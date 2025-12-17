@@ -10,34 +10,36 @@ export function BreakingNewsTicker() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    if (!breakingNews || breakingNews.length === 0) return;
+    
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % breakingNews?.length);
+      setCurrentIndex((prev) => (prev + 1) % breakingNews.length);
     }, 4000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [breakingNews]);
 
   return (
-    <div className="bg-red-500 text-black py-3 overflow-hidden border-b-4 border-black">
+    <div className="bg-[#CD5756] text-white py-3 overflow-hidden border-b border-[#C4B5A0]/40">
       <div className="container mx-auto px-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="bg-black text-yellow-300 p-2 border-4 border-black rotate-[-5deg] animate-pulse">
+            <div className="bg-[#3D3529] text-white p-2 border border-[#C4B5A0]/40 animate-pulse">
               <Zap className="h-4 w-4" />
             </div>
-            <div className="bg-white text-red-500 border-4 border-black px-3 py-1 font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+            <div className="bg-white text-[#CD5756] border border-[#C4B5A0]/40 px-3 py-1 font-semibold text-xs uppercase">
               BREAKING
             </div>
           </div>
 
           <div
-            className="flex-1 overflow-hidden relative"
+            className="flex-1 overflow-hidden relative flex items-center"
             style={{ minHeight: 28 }}
           >
             {breakingNews?.map((news, index) => (
               <span
                 key={index}
-                className={`absolute left-0 top-0 w-full text-base font-black uppercase transition-opacity duration-500 ease-in-out ${
+                className={`absolute left-0 top-1/2 -translate-y-1/2 w-full text-base font-semibold transition-opacity duration-500 ease-in-out ${
                   index === currentIndex ? "opacity-100" : "opacity-0"
                 } ${index === currentIndex ? "z-10" : "z-0"}`}
                 style={{

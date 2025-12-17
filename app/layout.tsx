@@ -4,12 +4,9 @@ import type React from "react";
 import Provider from "./provider";
 
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 
 import config from "@/config";
 import Script from "next/script";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Haluland - Music & Movie News | Entertainment, Reviews, Interviews",
@@ -99,7 +96,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={inter.className} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         {/* JSON-LD structured data is now injected via metadata.other */}
         <Provider googleClientId={config.GOOGLE_CLIENT_ID || ""}>
           {children}

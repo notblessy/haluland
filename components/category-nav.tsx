@@ -12,25 +12,25 @@ export function CategoryNav() {
   const { data: categoryOptions } = useCategoryOptions();
 
   const colors = [
-    "bg-pink-300",
-    "bg-blue-300",
-    "bg-green-300",
-    "bg-yellow-300",
-    "bg-purple-300",
-    "bg-orange-300",
+    "bg-[#6B8E5A]",
+    "bg-[#D4A574]",
+    "bg-[#C4B5A0]",
+    "bg-[#F4E4C1]",
+    "bg-[#B8956A]",
+    "bg-[#A8C5A0]",
   ];
 
   return (
-    <div className="border-b-4 border-black bg-white">
+    <div className="border-b border-[#C4B5A0]/40 bg-white">
       <div className="container mx-auto px-4 py-4">
         <ScrollArea className="w-full whitespace-nowrap">
           <div className="flex gap-3">
             <Link href="/">
               <button
-                className={`px-4 py-2 font-black uppercase text-sm border-4 border-black transition-all duration-200 ${
+                className={`px-4 py-2 font-semibold text-sm border border-[#C4B5A0]/60 transition-all duration-200 ${
                   !activeCategory
-                    ? "bg-black text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-                    : "bg-white text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]"
+                    ? "bg-[#0C3E2D] text-white border-[#0C3E2D]"
+                    : "bg-white text-[#3D3529] hover:bg-[#F5F1E8]"
                 }`}
               >
                 All Stories
@@ -39,17 +39,16 @@ export function CategoryNav() {
             {categoryOptions?.map((category, index) => {
               const isActive = activeCategory === category.slug;
               const bgColor = isActive
-                ? "bg-black"
+                ? "bg-[#0C3E2D]"
                 : colors[index % colors.length];
-              const textColor = isActive ? "text-white" : "text-black";
+              const textColor = isActive ? "text-white" : "text-[#3D3529]";
+              const borderColor = isActive ? "border-[#0C3E2D]" : "border-[#C4B5A0]/60";
 
               return (
                 <Link key={category.value} href={`/?category=${category.slug}`}>
                   <button
-                    className={`px-4 py-2 font-black uppercase text-sm border-4 border-black transition-all duration-200 ${bgColor} ${textColor} ${
-                      isActive
-                        ? "shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-                        : "hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]"
+                    className={`px-4 py-2 font-semibold text-sm border transition-all duration-200 ${bgColor} ${textColor} ${borderColor} ${
+                      !isActive ? "hover:bg-[#F5F1E8]" : ""
                     }`}
                   >
                     {category.label}
