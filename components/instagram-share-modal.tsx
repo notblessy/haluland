@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Download, Share2, Loader2, X } from "lucide-react";
 import { StoryType } from "@/hooks/use-story";
 import { useToast } from "@/hooks/use-toast";
-import html2canvas from "html2canvas";
 
 interface InstagramShareModalProps {
   story: StoryType;
@@ -384,7 +383,7 @@ export function InstagramShareModal({
     const instagramHeight = 1920;
     
     // Get device pixel ratio for high-DPI displays
-    const devicePixelRatio = window.devicePixelRatio || 1;
+    const devicePixelRatio = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1;
     
     // Temporarily remove scale transform from parent and move off-screen for clean capture
     const parentElement = storyRef.current?.parentElement;
@@ -409,6 +408,9 @@ export function InstagramShareModal({
 
     // Wait a frame for styles to apply
     await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    // Dynamically import html2canvas to avoid SSR issues
+    const html2canvas = (await import("html2canvas")).default;
 
     // Element is already at 1080x1920, use higher scale for quality
     const scale = Math.max(devicePixelRatio, 2);
