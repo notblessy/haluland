@@ -44,7 +44,11 @@ export const useSearch = () => {
 
   const { data, error, isValidating } = useSWR<
     ApiResponse<PaginatedResponse<StoryType>>
-  >(pathKey, { revalidateOnFocus: false });
+  >(pathKey, { 
+    revalidateOnFocus: false,
+    dedupingInterval: 2000,
+    keepPreviousData: true,
+  });
 
   useEffect(() => {
     if (!data) return;

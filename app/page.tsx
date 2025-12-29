@@ -18,7 +18,7 @@ import { Footer } from "@/components/footer";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearch } from "@/hooks/use-search";
-import { ArrowRight, Sparkles, TrendingUp, Clock, Zap, Gift, Calendar, Play, User, Eye, Share2, BookOpen, Tag, TrendingDown, MessageSquare, ThumbsUp, Bookmark } from "lucide-react";
+import { ArrowRight, Sparkles, TrendingUp, Clock, Zap, Gift, Calendar, Play, User, Eye, Share2, BookOpen, Tag, TrendingDown, MessageSquare, ThumbsUp, Bookmark, Loader2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 function HomeContent() {
@@ -54,13 +54,13 @@ function HomeContent() {
     if (categoryFilter) {
       onQuery({
         categorySlug: categoryFilter,
-        size: 10,
+        size: 30,
         sort: sortBy === "latest" ? "-published_at" : "-popular",
       });
     } else {
       onQuery({
         categorySlug: "",
-        size: 10,
+        size: 30,
         sort: sortBy === "latest" ? "-published_at" : "-popular",
       });
     }
@@ -83,10 +83,8 @@ function HomeContent() {
         <section className="bg-[#F5F1E8] border-b border-[#C4B5A0]/30">
           <div className="container mx-auto px-4 py-8">
             {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="bg-white border border-[#C4B5A0]/40 h-32 rounded-xs"></div>
-                ))}
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-[#0C3E2D]" />
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -146,12 +144,8 @@ function HomeContent() {
               {/* Main Featured Story Card */}
                 <div className="lg:col-span-2">
                 {loading ? (
-                  <div className="bg-white border border-[#C4B5A0]/40 p-6 rounded-xs">
-                    <div className="h-64 bg-[#E8DDD4] mb-4 rounded-xs"></div>
-                    <div className="space-y-3">
-                      <div className="h-6 w-3/4 bg-[#E8DDD4] rounded-xs"></div>
-                      <div className="h-4 w-full bg-[#E8DDD4] rounded-xs"></div>
-                    </div>
+                  <div className="flex items-center justify-center py-24">
+                    <Loader2 className="h-8 w-8 animate-spin text-[#0C3E2D]" />
                   </div>
                 ) : featuredStory ? (
                     <Link
@@ -260,16 +254,8 @@ function HomeContent() {
             </div>
 
             {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="bg-white border border-[#C4B5A0]/40 rounded-xs">
-                    <div className="aspect-[4/3] w-full bg-[#E8DDD4]"></div>
-                    <div className="p-4 space-y-3">
-                      <div className="h-6 w-3/4 bg-[#E8DDD4]"></div>
-                      <div className="h-4 w-full bg-[#E8DDD4]"></div>
-                    </div>
-                  </div>
-                ))}
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-[#0C3E2D]" />
               </div>
             ) : moreStories?.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -393,16 +379,8 @@ function HomeContent() {
             </div>
 
             {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="bg-white border border-[#C4B5A0]/40 rounded-xs">
-                    <div className="aspect-[3/2] w-full bg-[#E8DDD4]"></div>
-                    <div className="p-3 space-y-2">
-                      <div className="h-4 w-3/4 bg-[#E8DDD4]"></div>
-                      <div className="h-3 w-full bg-[#E8DDD4]"></div>
-                    </div>
-                  </div>
-                ))}
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-[#0C3E2D]" />
               </div>
             ) : latestStories?.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -486,7 +464,14 @@ function HomeContent() {
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={
+      <div className="fixed inset-0 bg-[#F5F1E8] flex items-center justify-center z-50">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-10 w-10 animate-spin text-[#0C3E2D]" />
+          <p className="text-sm font-semibold text-[#3D3529]">Loading...</p>
+        </div>
+      </div>
+    }>
       <HomeContent />
     </Suspense>
   );

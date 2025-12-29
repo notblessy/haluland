@@ -9,7 +9,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import GoogleIcon from "@/components/icon/google-icon";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -34,7 +34,7 @@ export default function LoginPage() {
     return (
       <div className="flex items-center justify-center h-screen bg-[#F5F1E8]">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-8 w-8 border-2 border-[#0C3E2D] border-t-transparent animate-spin rounded-xs"></div>
+          <Loader2 className="h-8 w-8 animate-spin text-[#0C3E2D]" />
           <p className="text-sm font-semibold text-[#3D3529]">Loading...</p>
         </div>
       </div>

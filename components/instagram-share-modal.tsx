@@ -576,7 +576,7 @@ export function InstagramShareModal({
               >
                 {isGenerating ? (
                   <>
-                    <div className="h-4 w-4 border-2 border-white border-t-transparent animate-spin rounded-xs" />
+                    <Loader2 className="h-4 w-4 animate-spin text-white" />
                     Generating...
                   </>
                 ) : (
@@ -596,7 +596,7 @@ export function InstagramShareModal({
             >
               {isGenerating ? (
                 <>
-                  <div className="h-4 w-4 border-2 border-current border-t-transparent animate-spin rounded-xs" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                   Generating...
                 </>
               ) : (

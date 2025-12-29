@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Search, Filter, X } from "lucide-react";
+import { Search, Filter, X, Loader2 } from "lucide-react";
 import { useSearch } from "@/hooks/use-search";
 import { useTagOptions } from "@/hooks/use-tags";
 import { useCategoryOptions } from "@/hooks/use-categories";
@@ -58,7 +58,7 @@ function SearchContent() {
       size?: number;
       sort?: string;
     } = {
-      size: 6,
+      size: 12,
       sort: sortBy === "latest" ? "-published_at" : "-popular",
     };
 
@@ -103,7 +103,7 @@ function SearchContent() {
       search: "",
       categoryId: "",
       tagIds: [],
-      size: 6,
+      size: 12,
       sort: sortBy === "latest" ? "-published_at" : "-popular",
     });
   };
@@ -271,17 +271,8 @@ function SearchContent() {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i}>
-                  <div className="aspect-[4/3] bg-[#E8DDD4] border border-[#C4B5A0]/40 mb-3 rounded-xs"></div>
-                  <div className="space-y-2">
-                    <div className="h-4 bg-[#E8DDD4] border border-[#C4B5A0]/40 w-3/4 rounded-xs"></div>
-                    <div className="h-3 bg-[#E8DDD4] border border-[#C4B5A0]/40 w-full rounded-xs"></div>
-                    <div className="h-3 bg-[#E8DDD4] border border-[#C4B5A0]/40 w-1/2 rounded-xs"></div>
-                  </div>
-                </div>
-              ))}
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-[#0C3E2D]" />
             </div>
           ) : stories?.records?.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -297,7 +288,7 @@ function SearchContent() {
                 >
                   {loadingMore ? (
                     <div className="flex items-center gap-3 bg-[#E8DDD4] border border-[#C4B5A0]/40 px-6 py-3 font-semibold text-sm rounded-xs text-[#3D3529]">
-                      <div className="animate-spin h-4 w-4 border-2 border-[#0C3E2D] border-t-transparent rounded-xs"></div>
+                      <Loader2 className="h-4 w-4 animate-spin text-[#0C3E2D]" />
                       <span>Loading more stories...</span>
                     </div>
                   ) : (
@@ -340,7 +331,11 @@ function SearchContent() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#F5F1E8] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[#0C3E2D]" />
+      </div>
+    }>
       <SearchContent />
     </Suspense>
   );

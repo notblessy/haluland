@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/lib/auth-context";
-import { Heart, Share2, Instagram } from "lucide-react";
+import { Heart, Share2, Instagram, Loader2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { StoryType, useStory } from "@/hooks/use-story";
@@ -222,7 +222,7 @@ export default function StoryPage({
                   }`}
                 >
                   {reactionLoading ? (
-                    <span className="animate-spin h-3 w-3 border-2 border-current border-t-transparent rounded-xs" />
+                    <Loader2 className="h-3 w-3 animate-spin" />
                   ) : (
                     <Heart
                       className={`h-3 w-3 ${
@@ -313,7 +313,7 @@ export default function StoryPage({
                       >
                         {reactionCommentLoading ? (
                           <span className="flex items-center gap-2">
-                            <span className="animate-spin h-3 w-3 border-2 border-current border-t-transparent rounded-xs"></span>
+                            <Loader2 className="h-3 w-3 animate-spin" />
                             Posting...
                           </span>
                         ) : (
@@ -380,7 +380,7 @@ export default function StoryPage({
                           >
                             {reactionDeleteCommentLoading &&
                             comment?.id === deletingId ? (
-                              <span className="animate-spin h-3 w-3 border-2 border-current border-t-transparent block rounded-xs" />
+                              <Loader2 className="h-3 w-3 animate-spin" />
                             ) : (
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"

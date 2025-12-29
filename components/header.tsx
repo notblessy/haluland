@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Search, LogOut, PenTool, Home } from "lucide-react";
+import { Search, LogOut, PenTool, Home, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function Header() {
@@ -40,7 +40,7 @@ export function Header() {
   if (loading && !user) {
     return (
       <div className="flex items-center justify-center h-16 bg-white border-b border-[#C4B5A0]/40">
-        <div className="h-8 w-8 border-2 border-t-transparent border-r-transparent border-l-[#6B8E5A] border-b-[#0C3E2D] animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#0C3E2D]" />
       </div>
     );
   }
