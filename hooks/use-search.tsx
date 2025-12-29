@@ -42,12 +42,16 @@ export const useSearch = () => {
 
   const pathKey = `v1/public/stories?${queryParams.toString()}`;
 
-  const { data, error, isValidating } = useSWR<
+  const { data, error, isValidating, isLoading } = useSWR<
     ApiResponse<PaginatedResponse<StoryType>>
   >(pathKey, { 
     revalidateOnFocus: false,
-    dedupingInterval: 2000,
+    dedupingInterval: 5000,
     keepPreviousData: true,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false,
+    errorRetryCount: 2,
+    errorRetryInterval: 1000,
   });
 
   useEffect(() => {
@@ -89,7 +93,7 @@ export const useSearch = () => {
         total: data?.data?.page_summary?.total ?? 0,
       },
     },
-    loading: isValidating && page === 1,
+    loading: (isLoading || isValidating) && page === 1 && !data,
     loadingMore: isValidating && page > 1,
     onQuery,
     loadMore,

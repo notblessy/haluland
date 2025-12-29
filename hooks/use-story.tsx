@@ -311,7 +311,12 @@ export const useBreaking = () => {
 
   const { data, isLoading, isValidating } = useSWR<ApiResponse<string[]>>(
     pathKey,
-    { revalidateOnFocus: false }
+    { 
+      revalidateOnFocus: false,
+      dedupingInterval: 10000,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+    }
   );
 
   return {

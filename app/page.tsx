@@ -36,6 +36,7 @@ function HomeContent() {
   const categoryFilter = searchParams.get("category");
   const [sortBy, setSortBy] = useState<"latest" | "popular">("latest");
   const [email, setEmail] = useState("");
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const featuredStory = stories?.records ? stories.records[0] : null;
   const regularStories = stories?.records?.slice(1);
@@ -66,11 +67,34 @@ function HomeContent() {
     }
   }, [categoryFilter, sortBy]);
 
+  // Track when initial data is loaded
+  useEffect(() => {
+    if (!loading && stories?.records && stories.records.length > 0) {
+      // Small delay to ensure all data is ready
+      const timer = setTimeout(() => {
+        setIsInitialLoad(false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, stories]);
+
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle newsletter signup
     console.log("Newsletter signup:", email);
   };
+
+  // Show fullscreen loader until initial data is loaded
+  if (isInitialLoad && (loading || !stories?.records || stories.records.length === 0)) {
+    return (
+      <div className="fixed inset-0 bg-[#F5F1E8] flex items-center justify-center z-50">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-10 w-10 animate-spin text-[#0C3E2D]" />
+          <p className="text-sm font-semibold text-[#3D3529]">Loading stories...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F5F1E8] flex flex-col">
@@ -462,7 +486,7 @@ function HomeContent() {
   );
 }
 
-export default function HomePage() {
+function HomePageWithLoading() {
   return (
     <Suspense fallback={
       <div className="fixed inset-0 bg-[#F5F1E8] flex items-center justify-center z-50">
@@ -475,4 +499,8 @@ export default function HomePage() {
       <HomeContent />
     </Suspense>
   );
+}
+
+export default function HomePage() {
+  return <HomePageWithLoading />;
 }

@@ -12,7 +12,12 @@ export const useCategoryOptions = () => {
 
   const { data, isLoading, isValidating } = useSWR<
     ApiResponse<CategoryOptionType[]>
-  >(pathKey, { revalidateOnFocus: false });
+  >(pathKey, { 
+    revalidateOnFocus: false,
+    dedupingInterval: 10000,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false,
+  });
 
   return {
     data: data?.data || [],
