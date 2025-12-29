@@ -37,6 +37,7 @@ function HomeContent() {
   const [sortBy, setSortBy] = useState<"latest" | "popular">("latest");
   const [email, setEmail] = useState("");
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isFadingOut, setIsFadingOut] = useState(false);
 
   const featuredStory = stories?.records ? stories.records[0] : null;
   const regularStories = stories?.records?.slice(1);
@@ -69,14 +70,17 @@ function HomeContent() {
 
   // Track when initial data is loaded
   useEffect(() => {
-    if (!loading && stories?.records && stories.records.length > 0) {
-      // Small delay to ensure all data is ready
+    if (!loading && stories?.records && stories.records.length > 0 && isInitialLoad) {
+      // Start fade out animation
+      setIsFadingOut(true);
+      // Remove loader after fade out completes
       const timer = setTimeout(() => {
         setIsInitialLoad(false);
-      }, 100);
+        setIsFadingOut(false);
+      }, 500); // Match transition duration
       return () => clearTimeout(timer);
     }
-  }, [loading, stories]);
+  }, [loading, stories, isInitialLoad]);
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,22 +89,26 @@ function HomeContent() {
   };
 
   // Show fullscreen loader until initial data is loaded
-  if (isInitialLoad && (loading || !stories?.records || stories.records.length === 0)) {
-    return (
-      <div className="fixed inset-0 bg-[#F5F1E8] flex items-center justify-center z-50">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-10 w-10 animate-spin text-[#0C3E2D]" />
-          <p className="text-sm font-semibold text-[#3D3529]">Loading stories...</p>
-        </div>
-      </div>
-    );
-  }
+  const shouldShowLoader = isInitialLoad && (loading || !stories?.records || stories.records.length === 0);
 
   return (
-    <div className="min-h-screen bg-[#F5F1E8] flex flex-col">
-      <Header />
-      <BreakingNewsTicker />
-      <CategoryNav />
+    <>
+      {(shouldShowLoader || isFadingOut) && (
+        <div 
+          className={`fixed inset-0 bg-[#F5F1E8] flex items-center justify-center z-50 transition-opacity duration-500 ease-out ${
+            isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
+        >
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="h-10 w-10 animate-spin text-[#0C3E2D]" />
+            <p className="text-sm font-semibold text-[#3D3529]">Loading stories...</p>
+          </div>
+        </div>
+      )}
+      <div className="min-h-screen bg-[#F5F1E8] flex flex-col">
+        <Header />
+        <BreakingNewsTicker />
+        <CategoryNav />
 
       <main className="flex-grow">
         {/* Top News Cards Row */}
@@ -482,7 +490,8 @@ function HomeContent() {
       </main>
 
       <Footer />
-    </div>
+      </div>
+    </>
   );
 }
 
