@@ -12,7 +12,6 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { BreakingNewsTicker } from "@/components/breaking-news-ticker";
 import { TrendingSection } from "@/components/trending-section";
-import { FeaturedCategories } from "@/components/featured-categories";
 import { NewsletterSignup } from "@/components/newsletter-signup";
 import { Footer } from "@/components/footer";
 import Link from "next/link";
@@ -36,12 +35,10 @@ function HomeContent() {
   const categoryFilter = searchParams.get("category");
   const [sortBy, setSortBy] = useState<"latest" | "popular">("latest");
   const [email, setEmail] = useState("");
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [isFadingOut, setIsFadingOut] = useState(false);
+  const [hasInitialQuery, setHasInitialQuery] = useState(false);
 
   const featuredStory = stories?.records ? stories.records[0] : null;
   const regularStories = stories?.records?.slice(1);
-  const topStories = stories?.records?.slice(0, 4);
   const moreStories = stories?.records?.slice(1, 13);
   const latestStories = stories?.records?.slice(0, 8);
   
@@ -52,35 +49,29 @@ function HomeContent() {
     return Math.max(1, Math.ceil(words / 200));
   };
 
+  // Initial query on mount
   useEffect(() => {
-    if (categoryFilter) {
+    if (!hasInitialQuery) {
       onQuery({
-        categorySlug: categoryFilter,
+        categorySlug: categoryFilter || "",
         size: 30,
         sort: sortBy === "latest" ? "-published_at" : "-popular",
       });
-    } else {
-      onQuery({
-        categorySlug: "",
-        size: 30,
-        sort: sortBy === "latest" ? "-published_at" : "-popular",
-      });
+      setHasInitialQuery(true);
     }
-  }, [categoryFilter, sortBy]);
+  }, []);
 
-  // Track when initial data is loaded
+  // Update query when filters change
   useEffect(() => {
-    if (!loading && stories?.records && stories.records.length > 0 && isInitialLoad) {
-      // Start fade out animation
-      setIsFadingOut(true);
-      // Remove loader after fade out completes
-      const timer = setTimeout(() => {
-        setIsInitialLoad(false);
-        setIsFadingOut(false);
-      }, 500); // Match transition duration
-      return () => clearTimeout(timer);
+    if (hasInitialQuery) {
+      onQuery({
+        categorySlug: categoryFilter || "",
+        size: 30,
+        sort: sortBy === "latest" ? "-published_at" : "-popular",
+      });
     }
-  }, [loading, stories, isInitialLoad]);
+  }, [categoryFilter, sortBy, hasInitialQuery]);
+
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,172 +79,99 @@ function HomeContent() {
     console.log("Newsletter signup:", email);
   };
 
-  // Show fullscreen loader until initial data is loaded
-  const shouldShowLoader = isInitialLoad && (loading || !stories?.records || stories.records.length === 0);
+  // Show fullscreen loader until ALL content is loaded
+  const shouldShowLoader = loading;
+  const hasStories = stories?.records && stories.records.length > 0;
+  const shouldShowTrending = !categoryFilter || hasStories;
+
+  // Don't show page content until loading is complete
+  if (shouldShowLoader) {
+    return (
+      <div className="fixed inset-0 bg-[#FAFAFA] flex items-center justify-center z-50">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-10 w-10 animate-spin text-[#1a1a1a]" />
+          <p className="text-sm font-semibold text-[#1a1a1a]">Loading stories...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
-      {(shouldShowLoader || isFadingOut) && (
-        <div 
-          className={`fixed inset-0 bg-[#F5F1E8] flex items-center justify-center z-50 transition-opacity duration-500 ease-out ${
-            isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
-          }`}
-        >
-          <div className="flex flex-col items-center gap-4">
-            <Loader2 className="h-10 w-10 animate-spin text-[#0C3E2D]" />
-            <p className="text-sm font-semibold text-[#3D3529]">Loading stories...</p>
-          </div>
-        </div>
-      )}
-      <div className="min-h-screen bg-[#F5F1E8] flex flex-col">
+      <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
         <Header />
         <BreakingNewsTicker />
         <CategoryNav />
 
       <main className="flex-grow">
-        {/* Top News Cards Row */}
-        <section className="bg-[#F5F1E8] border-b border-[#C4B5A0]/30">
-          <div className="container mx-auto px-4 py-8">
-            {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-[#0C3E2D]" />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {topStories?.map((story) => {
-                  return (
-                  <Link
-                    key={story.id}
-                    href={`/stories/${story.slug}`}
-                      className="group"
-                    >
-                      <div className="bg-white border border-[#C4B5A0]/40 hover:shadow-md transition-all duration-200 h-full rounded-xs overflow-hidden">
-                        <div className="flex gap-3 p-4 h-full">
-                          <div className="relative w-20 h-20 flex-shrink-0 border border-[#C4B5A0]/40 overflow-hidden rounded-xs">
-                            <Image
-                              src={story.thumbnail || "/placeholder.svg"}
-                              alt={story.title}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            {story.category && (
-                              <div className="inline-block bg-[#6B8E5A] text-white px-2 py-1 text-xs font-semibold uppercase mb-2 rounded-xs">
-                                {story.category.name}
-                              </div>
-                            )}
-                            <h3 className="font-semibold text-xs mb-2 text-[#3D3529] line-clamp-2 leading-snug">
-                              {story.title}
-                            </h3>
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2 text-[#8B7355] text-xs">
-                                <Calendar className="h-3 w-3" />
-                                <span>{story.published_at ? formatDistanceToNow(new Date(story.published_at), { addSuffix: true }) : "Today"}</span>
-                              </div>
-                              {story.author && (
-                                <div className="flex items-center gap-2 text-[#8B7355] text-xs">
-                                  <User className="h-3 w-3" />
-                                  <span className="truncate">{story.author.name}</span>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                  </Link>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </section>
-
-        <div className="container mx-auto px-4 py-16">
+        <div className="max-w-5xl mx-auto px-4 py-16">
           {/* Featured Story Card */}
           <section className="mb-16">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className={`grid grid-cols-1 ${shouldShowTrending ? 'lg:grid-cols-3' : 'lg:grid-cols-1'} gap-8`}>
               {/* Main Featured Story Card */}
-                <div className="lg:col-span-2">
-                {loading ? (
-                  <div className="flex items-center justify-center py-24">
-                    <Loader2 className="h-8 w-8 animate-spin text-[#0C3E2D]" />
-                  </div>
-                ) : featuredStory ? (
+                <div className={shouldShowTrending ? "lg:col-span-2" : "lg:col-span-1"}>
+                {featuredStory ? (
                     <Link
                       href={`/stories/${featuredStory.slug}`}
                       className="group block"
                     >
-                    <div className="bg-white border border-[#C4B5A0]/40 hover:shadow-md transition-all duration-200 rounded-xs overflow-hidden">
+                    <div className="bg-blue-50 border-2 border-[#1a1a1a] shadow-[4px_4px_0px_0px_rgba(26,26,26,0.3)] hover:shadow-[6px_6px_0px_0px_rgba(26,26,26,0.3)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200 overflow-hidden">
                       {/* Featured Image */}
-                      <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-[#C4B5A0]/30">
+                      <div className="relative aspect-[16/9] w-full overflow-hidden border-b-2 border-[#1a1a1a]">
                         <Image
                           src={featuredStory.thumbnail || "/placeholder.svg"}
                           alt={featuredStory.title}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
+                      </div>
+                      
+                      <div className="p-6 bg-blue-50">
+                        {/* Category */}
                         {featuredStory.category && (
-                          <div className="absolute top-4 left-4 bg-[#6B8E5A] text-white px-3 py-1 text-xs font-semibold uppercase rounded-xs border border-white/20">
+                          <div className="text-gray-500 text-[10px] font-medium uppercase tracking-wider mb-2">
                             {featuredStory.category.name}
                           </div>
                         )}
-                        <div className="absolute top-4 right-4">
-                          <Sparkles className="h-6 w-6 text-[#D4A574]" />
-                        </div>
-                      </div>
-                      
-                      <div className="p-6">
                         {/* Title */}
-                        <h2 className="text-xl md:text-2xl font-bold mb-3 text-[#3D3529] leading-tight">
+                        <h2 className="text-2xl md:text-3xl font-bold mb-3 text-[#1a1a1a] leading-tight">
                           {featuredStory.title}
                         </h2>
 
                         {/* Metadata Row */}
-                        <div className="flex flex-wrap items-center gap-4 text-xs mb-4 pb-4 border-b border-[#C4B5A0]/30">
-                          <div className="flex items-center gap-2 text-[#8B7355]">
+                        <div className="flex flex-wrap items-center gap-4 text-xs mb-4 pb-4 border-b border-gray-200">
+                          <div className="flex items-center gap-2 text-[#1a1a1a]/50">
                             <Calendar className="h-4 w-4" />
                             <span>{featuredStory.published_at ? formatDistanceToNow(new Date(featuredStory.published_at), { addSuffix: true }) : "Today"}</span>
                           </div>
                           {featuredStory.author && (
-                            <div className="flex items-center gap-2 text-[#8B7355]">
+                            <div className="flex items-center gap-2 text-[#1a1a1a]/50">
                               <User className="h-4 w-4" />
                               <span>{featuredStory.author.name}</span>
                             </div>
                           )}
                         </div>
 
-                        {/* Description with BY AI badge */}
+                        {/* Description */}
                         <div className="mb-6">
-                          <p className="text-sm text-[#5A4A3A] mb-3 leading-relaxed">
+                          <p className="text-sm text-[#1a1a1a]/70 mb-3 leading-relaxed line-clamp-3">
                             {featuredStory.excerpt}
                           </p>
-                          <div className="flex flex-wrap items-center gap-2">
-                            {featuredStory.category && (
-                              <span className="inline-block bg-[#6B8E5A] text-white px-3 py-1 text-xs font-semibold uppercase rounded-xs border border-[#6B8E5A]">
-                                {featuredStory.category.name}
-                              </span>
-                            )}
-                            <span className="inline-block bg-[#E8DDD4] text-[#5A4A3A] px-3 py-1 text-xs font-medium rounded-xs border border-[#C4B5A0]/40">
-                              <Tag className="h-3 w-3 inline mr-1" />
-                              Trending
-                              </span>
-                          </div>
                         </div>
 
                         {/* Action Buttons */}
                         <div className="flex flex-wrap items-center gap-3">
-                          <button className="bg-white border border-[#0C3E2D] text-[#0C3E2D] text-xs font-semibold px-6 py-2 rounded-xs hover:bg-[#0C3E2D]/10 transition-colors flex items-center gap-2">
+                          <button className="bg-[#2a2a2a] text-white text-xs font-bold uppercase tracking-wider px-6 py-2 hover:bg-[#2a2a2a]/90 transition-colors flex items-center gap-2">
                             Read More
                             <ArrowRight className="h-3 w-3" />
                           </button>
-                          <button className="bg-white border border-[#C4B5A0]/40 text-[#5A4A3A] px-4 py-2 rounded-xs hover:bg-[#F5F1E8] transition-colors flex items-center gap-2">
+                          <button className="bg-[#FAFAFA] border border-gray-300 text-[#1a1a1a] px-4 py-2 hover:border-gray-300 transition-colors flex items-center gap-2">
                             <Share2 className="h-3 w-3" />
-                            <span className="text-xs">Share</span>
+                            <span className="text-xs uppercase tracking-wider">Share</span>
                           </button>
-                          <button className="bg-white border border-[#C4B5A0]/40 text-[#5A4A3A] px-4 py-2 rounded-xs hover:bg-[#F5F1E8] transition-colors flex items-center gap-2">
+                          <button className="bg-[#FAFAFA] border border-gray-300 text-[#1a1a1a] px-4 py-2 hover:border-gray-300 transition-colors flex items-center gap-2">
                             <Bookmark className="h-3 w-3" />
-                            <span className="text-xs">Save</span>
+                            <span className="text-xs uppercase tracking-wider">Save</span>
                           </button>
                           </div>
                         </div>
@@ -263,42 +181,51 @@ function HomeContent() {
                 </div>
 
                 {/* Trending Sidebar */}
-                <div className="lg:col-span-1">
-                <div className="bg-white border border-[#C4B5A0]/40 p-6 h-full rounded-xs">
-                    <TrendingSection />
-                </div>
-              </div>
+                {shouldShowTrending && (
+                  <div className="lg:col-span-1">
+                    <div className="px-6 h-full">
+                      <TrendingSection />
+                    </div>
+                  </div>
+                )}
             </div>
           </section>
 
           {/* More Stories Grid */}
           <section className="mb-16">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">
-              <h2 className="text-2xl md:text-3xl font-black uppercase text-[#3D3529]">
+              <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-wider text-[#1a1a1a]">
                 More Stories
               </h2>
               <Link href="/search">
-                <button className="bg-white border border-[#C4B5A0]/60 text-[#5A4A3A] font-semibold px-6 py-3 text-sm flex items-center gap-2 rounded-xs hover:bg-[#F5F1E8] transition-colors">
+                <button className="bg-[#FAFAFA] border border-gray-300 text-[#1a1a1a] font-bold uppercase tracking-wider px-6 py-3 text-xs flex items-center gap-2 hover:border-gray-300 transition-colors">
                   View all stories
                   <ArrowRight className="h-4 w-4" />
                 </button>
               </Link>
             </div>
 
-            {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-[#0C3E2D]" />
-              </div>
-            ) : moreStories?.length > 0 ? (
+            {moreStories?.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {moreStories?.slice(0, 9).map((story) => (
+                {moreStories?.slice(0, 9).map((story, index) => {
+                  const colors = [
+                    "bg-pink-50",
+                    "bg-blue-50",
+                    "bg-green-50",
+                    "bg-yellow-50",
+                    "bg-purple-50",
+                    "bg-orange-50",
+                  ];
+                  const bgColor = colors[index % colors.length];
+                  
+                  return (
                     <Link
                       key={story.id}
                       href={`/stories/${story.slug}`}
                       className="group block"
                     >
-                    <div className="bg-white border border-[#C4B5A0]/40 hover:shadow-md transition-all duration-200 rounded-xs overflow-hidden">
-                      <div className="relative aspect-[4/3] overflow-hidden border-b border-[#C4B5A0]/30">
+                    <div className={`${bgColor} border-2 border-[#1a1a1a] shadow-[3px_3px_0px_0px_rgba(26,26,26,0.2)] hover:shadow-[5px_5px_0px_0px_rgba(26,26,26,0.2)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200 overflow-hidden`}>
+                      <div className="relative aspect-[4/3] overflow-hidden border-b-2 border-[#1a1a1a]">
                           <Image
                             src={story.thumbnail || "/placeholder.svg"}
                             alt={story.title}
@@ -307,57 +234,41 @@ function HomeContent() {
                           />
                         </div>
                       <div className="p-4">
-                        <div className="flex items-start justify-between mb-3">
-                          {story.category && (
-                            <div className="inline-block bg-[#6B8E5A] text-white px-3 py-1 text-xs font-semibold uppercase rounded-xs border border-[#6B8E5A]">
-                              {story.category.name}
-                            </div>
-                          )}
-                          <button className="text-[#8B7355] hover:text-[#5A4A3A] transition-colors">
-                            <Bookmark className="h-4 w-4" />
-                          </button>
-                        </div>
-                        <h3 className="text-base font-semibold mb-2 leading-tight line-clamp-2 text-[#3D3529]">
+                        {story.category && (
+                          <div className="text-gray-500 text-[10px] font-medium uppercase tracking-wider mb-2">
+                            {story.category.name}
+                          </div>
+                        )}
+                        <h3 className="text-base font-bold mb-2 leading-tight line-clamp-2 text-[#1a1a1a]">
                             {story.title}
                           </h3>
-                        <p className="text-xs text-[#5A4A3A] mb-3 line-clamp-2 leading-relaxed">
+                        <p className="text-xs font-normal mb-3 line-clamp-2 text-gray-600">
                             {story.excerpt}
                           </p>
-                        <div className="space-y-2 mb-3 pb-3 border-b border-[#C4B5A0]/30">
-                          <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center justify-between text-xs mb-2">
                             {story.author && (
-                              <div className="flex items-center gap-1 text-[#8B7355]">
-                                <User className="h-3 w-3" />
-                                <span>{story.author.name}</span>
-                              </div>
+                              <span className="text-gray-600">
+                                {story.author.name}
+                              </span>
                             )}
                             {story.published_at && (
-                              <div className="flex items-center gap-1 text-[#8B7355]">
-                                <Calendar className="h-3 w-3" />
-                                <span>{formatDistanceToNow(
+                              <span className="flex items-center gap-1 text-gray-600">
+                                {formatDistanceToNow(
                                   new Date(story.published_at),
                                   { addSuffix: true }
-                                )}</span>
-                              </div>
+                                )}
+                              </span>
                             )}
-                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <button className="flex-1 bg-white border border-[#0C3E2D] text-[#0C3E2D] text-xs font-semibold px-3 py-2 rounded-xs hover:bg-[#0C3E2D]/10 transition-colors">
-                            Read
-                          </button>
-                          <button className="bg-white border border-[#C4B5A0]/40 text-[#5A4A3A] px-3 py-2 rounded-xs hover:bg-[#F5F1E8] transition-colors">
-                            <Share2 className="h-3 w-3" />
-                          </button>
-                          </div>
                         </div>
                       </div>
                     </Link>
-                ))}
+                  );
+                })}
               </div>
             ) : (
-              <div className="bg-white border border-[#C4B5A0]/40 p-12 text-center rounded-xs">
-                <p className="text-base font-semibold text-[#5A4A3A]">
+              <div className="bg-[#FAFAFA] border border-gray-200 p-12 text-center">
+                <p className="text-base font-semibold text-[#1a1a1a]/60">
                   {categoryFilter
                     ? `No stories found in ${categoryFilter} category.`
                     : "No stories found."}
@@ -368,7 +279,7 @@ function HomeContent() {
             {moreStories?.length > 0 && (
               <div className="text-center mt-12">
                 <Link href="/search">
-                  <button className="bg-[#0C3E2D] text-white font-semibold px-8 py-4 text-base rounded-xs hover:bg-[#0A3225] transition-colors flex items-center gap-3 mx-auto">
+                  <button className="bg-[#FAFAFA] border border-gray-300 text-[#1a1a1a] font-bold uppercase tracking-wider px-8 py-4 text-sm hover:border-gray-400 transition-colors flex items-center gap-3 mx-auto">
                     View More Stories
                     <ArrowRight className="h-4 w-4" />
                   </button>
@@ -381,27 +292,27 @@ function HomeContent() {
           <section className="mb-16">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">
               <div>
-                <h2 className="text-2xl md:text-3xl font-black uppercase text-[#3D3529] mb-2">
+                <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-wider text-[#1a1a1a] mb-2">
                   Latest Stories
                 </h2>
-                <p className="text-[#8B7355] text-xs">Stay updated with the most recent news and insights</p>
+                <p className="text-[#1a1a1a]/50 text-xs">Stay updated with the most recent news and insights</p>
               </div>
               <div className="flex gap-2">
                 <button
-                  className={`px-4 py-2 font-semibold text-sm border border-[#C4B5A0]/60 rounded-xs transition-colors ${
+                  className={`px-4 py-2 font-bold uppercase tracking-wider text-xs border border-gray-300 transition-colors ${
                     sortBy === "latest"
-                      ? "bg-[#0C3E2D] text-white border-[#0C3E2D]"
-                      : "bg-white text-[#5A4A3A] hover:bg-[#F5F1E8]"
+                      ? "bg-[#2a2a2a] text-white border-black"
+                      : "bg-[#FAFAFA] text-[#1a1a1a] hover:border-gray-300"
                   }`}
                   onClick={() => setSortBy("latest")}
                 >
                   Latest
                 </button>
                 <button
-                  className={`px-4 py-2 font-semibold text-sm border border-[#C4B5A0]/60 rounded-xs transition-colors ${
+                  className={`px-4 py-2 font-bold uppercase tracking-wider text-xs border border-gray-300 transition-colors ${
                     sortBy === "popular"
-                      ? "bg-[#0C3E2D] text-white border-[#0C3E2D]"
-                      : "bg-white text-[#5A4A3A] hover:bg-[#F5F1E8]"
+                      ? "bg-[#2a2a2a] text-white border-black"
+                      : "bg-[#FAFAFA] text-[#1a1a1a] hover:border-gray-300"
                   }`}
                   onClick={() => setSortBy("popular")}
                 >
@@ -410,82 +321,63 @@ function HomeContent() {
               </div>
             </div>
 
-            {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-[#0C3E2D]" />
-              </div>
-            ) : latestStories?.length > 0 ? (
+            {latestStories?.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {latestStories?.map((story) => (
-                  <Link
-                    key={story.id}
-                    href={`/stories/${story.slug}`}
-                    className="group block"
-                  >
-                    <div className="bg-white border border-[#C4B5A0]/40 hover:shadow-md transition-all duration-200 h-full rounded-xs overflow-hidden">
-                      <div className="relative aspect-[3/2] overflow-hidden border-b border-[#C4B5A0]/30">
+                {latestStories?.map((story, index) => {
+                  const colors = [
+                    "bg-pink-50",
+                    "bg-blue-50",
+                    "bg-green-50",
+                    "bg-yellow-50",
+                    "bg-purple-50",
+                    "bg-orange-50",
+                  ];
+                  const bgColor = colors[index % colors.length];
+                  
+                  return (
+                    <Link
+                      key={story.id}
+                      href={`/stories/${story.slug}`}
+                      className="group block"
+                    >
+                    <div className={`${bgColor} border-2 border-[#1a1a1a] shadow-[3px_3px_0px_0px_rgba(26,26,26,0.2)] hover:shadow-[5px_5px_0px_0px_rgba(26,26,26,0.2)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200 h-full overflow-hidden`}>
+                      <div className="relative aspect-[3/2] overflow-hidden border-b-2 border-[#1a1a1a]">
                         <Image
                           src={story.thumbnail || "/placeholder.svg"}
                           alt={story.title}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
+                      </div>
+                      <div className="p-3">
+                        <h3 className="text-sm font-bold mb-1 leading-tight line-clamp-2 text-[#1a1a1a]">
+                          {story.title}
+                        </h3>
                         {story.category && (
-                          <div className="absolute top-2 left-2 bg-[#6B8E5A] text-white px-2 py-1 text-xs font-semibold uppercase rounded-xs border border-white/20">
+                          <div className="text-gray-500 text-[10px] font-medium uppercase tracking-wider mb-2">
                             {story.category.name}
                           </div>
                         )}
-                      </div>
-                      <div className="p-3">
-                        <h3 className="text-sm font-semibold mb-2 leading-tight line-clamp-2 text-[#3D3529]">
-                          {story.title}
-                        </h3>
                         {story.author && (
-                          <div className="flex items-center gap-1 text-xs text-[#8B7355] mb-2">
+                          <div className="flex items-center gap-1 text-xs text-gray-600 mb-2">
                             <User className="h-3 w-3" />
                             <span className="truncate max-w-[80px]">{story.author.name}</span>
                           </div>
                         )}
                         {story.published_at && (
-                          <div className="text-xs text-[#8B7355]/70">
+                          <div className="text-xs text-gray-600">
                             {formatDistanceToNow(new Date(story.published_at), { addSuffix: true })}
-                </div>
+                          </div>
                         )}
                   </div>
                 </div>
                   </Link>
-                ))}
+                  );
+                })}
               </div>
             ) : null}
           </section>
 
-          {/* Featured Categories */}
-          <section className="mb-16">
-            <FeaturedCategories />
-          </section>
-
-          {/* Statistics & Insights Section */}
-          <section className="mb-16 bg-white border border-[#C4B5A0]/40 p-6 rounded-xs">
-            <h2 className="text-xl md:text-2xl font-black uppercase text-[#3D3529] mb-4">Platform Insights</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-black text-[#0C3E2D] mb-1">1.2M+</div>
-                <div className="text-xs text-[#8B7355] font-semibold">Total Stories</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-black text-[#0C3E2D] mb-1">45K+</div>
-                <div className="text-xs text-[#8B7355] font-semibold">Active Readers</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-black text-[#0C3E2D] mb-1">850+</div>
-                <div className="text-xs text-[#8B7355] font-semibold">Categories</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-black text-[#0C3E2D] mb-1">2.5M+</div>
-                <div className="text-xs text-[#8B7355] font-semibold">Monthly Views</div>
-              </div>
-            </div>
-          </section>
         </div>
       </main>
 
@@ -498,10 +390,10 @@ function HomeContent() {
 function HomePageWithLoading() {
   return (
     <Suspense fallback={
-      <div className="fixed inset-0 bg-[#F5F1E8] flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-[#FAFAFA] flex items-center justify-center z-50">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-10 w-10 animate-spin text-[#0C3E2D]" />
-          <p className="text-sm font-semibold text-[#3D3529]">Loading...</p>
+          <Loader2 className="h-10 w-10 animate-spin text-[#1a1a1a]" />
+          <p className="text-sm font-semibold text-[#1a1a1a]">Loading...</p>
         </div>
       </div>
     }>

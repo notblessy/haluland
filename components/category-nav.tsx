@@ -11,44 +11,32 @@ export function CategoryNav() {
 
   const { data: categoryOptions } = useCategoryOptions();
 
-  const colors = [
-    "bg-[#6B8E5A]",
-    "bg-[#D4A574]",
-    "bg-[#C4B5A0]",
-    "bg-[#F4E4C1]",
-    "bg-[#B8956A]",
-    "bg-[#A8C5A0]",
-  ];
-
   return (
-    <div className="border-b border-[#C4B5A0]/40 bg-white">
-      <div className="container mx-auto px-4 py-4">
+    <div className="border-b border-gray-200 bg-[#FAFAFA]">
+      <div className="max-w-5xl mx-auto px-4 py-4">
         <ScrollArea className="w-full whitespace-nowrap">
           <div className="flex gap-3">
             <Link href="/">
               <button
-                className={`px-4 py-2 font-semibold text-sm border border-[#C4B5A0]/60 transition-all duration-200 ${
+                className={`px-4 py-2 font-bold text-xs uppercase tracking-wider border transition-all duration-200 ${
                   !activeCategory
-                    ? "bg-[#0C3E2D] text-white border-[#0C3E2D]"
-                    : "bg-white text-[#3D3529] hover:bg-[#F5F1E8]"
+                    ? "bg-[#2a2a2a] text-white border-[#2a2a2a]"
+                    : "bg-[#FAFAFA] text-[#1a1a1a] border-gray-300 hover:border-gray-300"
                 }`}
               >
                 All Stories
               </button>
             </Link>
-            {categoryOptions?.map((category, index) => {
+            {categoryOptions?.map((category) => {
               const isActive = activeCategory === category.slug;
-              const bgColor = isActive
-                ? "bg-[#0C3E2D]"
-                : colors[index % colors.length];
-              const textColor = isActive ? "text-white" : "text-[#3D3529]";
-              const borderColor = isActive ? "border-[#0C3E2D]" : "border-[#C4B5A0]/60";
 
               return (
                 <Link key={category.value} href={`/?category=${category.slug}`}>
                   <button
-                    className={`px-4 py-2 font-semibold text-sm border transition-all duration-200 ${bgColor} ${textColor} ${borderColor} ${
-                      !isActive ? "hover:bg-[#F5F1E8]" : ""
+                    className={`px-4 py-2 font-bold text-xs uppercase tracking-wider border transition-all duration-200 ${
+                      isActive
+                        ? "bg-[#2a2a2a] text-white border-[#2a2a2a]"
+                        : "bg-[#FAFAFA] text-[#1a1a1a] border-gray-300 hover:border-gray-300"
                     }`}
                   >
                     {category.label}

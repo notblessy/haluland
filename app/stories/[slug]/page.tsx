@@ -9,8 +9,20 @@ import StoryDetail from "@/components/story-detail";
 async function findStoryBySlug(slug: string): Promise<StoryType | null> {
   try {
     const res = await api.get(`/v1/public/stories/${slug}`);
-    return res.data.data as StoryType;
+    
+    // Check if response is successful and has data
+    if (res.status >= 200 && res.status < 300 && res.data?.data) {
+      return res.data.data as StoryType;
+    }
+    
+    // If response structure is different, try direct access
+    if (res.data && !res.data.data && res.data.id) {
+      return res.data as StoryType;
+    }
+    
+    return null;
   } catch (err) {
+    console.error("Error fetching story by slug:", err);
     return null;
   }
 }
@@ -19,15 +31,16 @@ async function findStoryBySlug(slug: string): Promise<StoryType | null> {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const story = await findStoryBySlug(params.slug);
+  const { slug } = await params;
+  const story = await findStoryBySlug(slug);
 
   if (!story) return {};
 
   // SEO keywords (customize as needed)
   const keywords = story.tags ? story.tags.join(", ") : "haluland, news, stories";
-  const canonicalUrl = `https://haluland.com/stories/${params.slug}`;
+  const canonicalUrl = `https://haluland.com/stories/${slug}`;
 
   return {
     title: `${story.title} | Haluland - ${keywords}`,
@@ -78,9 +91,10 @@ export async function generateMetadata({
 export default async function StoryPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const story = await findStoryBySlug(params.slug);
+  const { slug } = await params;
+  const story = await findStoryBySlug(slug);
 
   if (!story) return notFound();
 

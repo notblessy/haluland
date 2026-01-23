@@ -138,14 +138,14 @@ export default function StoryPage({
 
   if (!story) {
     return (
-      <div className="min-h-screen bg-[#F5F1E8] flex flex-col">
+      <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
         <Header />
-        <div className="container mx-auto px-4 py-16 flex-grow">
-          <div className="max-w-2xl mx-auto text-center bg-white border border-[#C4B5A0]/40 rounded-xs shadow-sm p-8">
-            <h1 className="text-2xl font-semibold text-[#3D3529] mb-3">
+        <div className="max-w-5xl mx-auto px-4 py-16 flex-grow">
+          <div className="max-w-2xl mx-auto text-center bg-[#FAFAFA] border border-gray-200 p-8">
+            <h1 className="text-2xl font-bold text-[#1a1a1a] mb-3">
               Story Not Found
             </h1>
-            <p className="text-sm text-[#5A4A3A]">
+            <p className="text-sm text-gray-600">
               The story you're looking for doesn't exist or has been removed.
             </p>
           </div>
@@ -156,52 +156,42 @@ export default function StoryPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F1E8] flex flex-col">
+    <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
       <Header />
 
       <main className="max-w-4xl mx-auto px-4 py-8 flex-grow">
         <article>
           {/* Story Header */}
           <header className="mb-8">
-            <div className="flex flex-wrap items-center gap-2 mb-4">
-              {story.category && (
-                <div className="bg-[#6B8E5A] border border-[#6B8E5A] text-white font-semibold uppercase px-3 py-1 text-xs rounded-xs">
-                  {story.category.name}
-                </div>
-              )}
-              {story.tags?.map((tag) => (
-                <div
-                  key={tag.id}
-                  className="bg-[#E8DDD4] border border-[#C4B5A0]/40 text-[#5A4A3A] font-medium px-2 py-1 text-xs rounded-xs"
-                >
-                  {tag.name}
-                </div>
-              ))}
-            </div>
+            {story.category && (
+              <div className="text-gray-500 text-[10px] font-medium uppercase tracking-wider mb-3">
+                {story.category.name}
+              </div>
+            )}
 
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-black leading-tight mb-6 text-[#3D3529]">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-[#1a1a1a]">
               {story.title}
             </h1>
 
-            <div className="flex items-center justify-between flex-wrap gap-4 mb-6 p-4 bg-white border border-[#C4B5A0]/40 rounded-xs">
+            <div className="flex items-center justify-between flex-wrap gap-4 mb-6 pb-6 border-b border-gray-200">
               <div className="flex items-center gap-3">
                 {story.author && (
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 border border-[#C4B5A0]/40 bg-gradient-to-br from-[#6B8E5A] to-[#A8C5A0] flex items-center justify-center font-semibold text-sm rounded-xs">
+                    <div className="w-10 h-10 border border-gray-300 bg-[#2a2a2a] flex items-center justify-center font-semibold text-sm text-white">
                       {story.author.picture ? (
                         <img
                           src={story.author.picture}
                           alt={story.author.name}
-                          className="w-full h-full object-cover rounded-xs"
+                          className="w-full h-full object-cover"
                         />
                       ) : (
                         story.author.name.charAt(0).toUpperCase()
                       )}
                     </div>
                     <div>
-                      <p className="font-semibold text-sm text-[#3D3529]">{story.author.name}</p>
+                      <p className="font-bold text-sm text-[#1a1a1a]">{story.author.name}</p>
                       {story.published_at && (
-                        <p className="text-xs text-[#8B7355]">
+                        <p className="text-xs text-gray-600">
                           {formatDistanceToNow(new Date(story.published_at), {
                             addSuffix: true,
                           })}
@@ -215,10 +205,10 @@ export default function StoryPage({
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleLike}
-                  className={`px-3 py-2 font-semibold text-xs rounded-xs transition-colors flex items-center gap-2 ${
+                  className={`px-3 py-2 font-bold uppercase tracking-wider text-xs transition-colors flex items-center gap-2 ${
                     story?.is_liked
-                      ? "bg-[#0C3E2D] text-white border border-[#0C3E2D]"
-                      : "bg-white border border-[#C4B5A0]/40 text-[#3D3529] hover:bg-[#F5F1E8]"
+                      ? "bg-[#2a2a2a] text-white border border-[#2a2a2a] hover:bg-[#3a3a3a]"
+                      : "bg-[#FAFAFA] border border-gray-300 text-[#1a1a1a] hover:border-gray-400"
                   }`}
                 >
                   {reactionLoading ? (
@@ -234,23 +224,17 @@ export default function StoryPage({
                 </button>
                 <button
                   onClick={handleShare}
-                  className="bg-white border border-[#C4B5A0]/40 text-[#3D3529] px-3 py-2 rounded-xs hover:bg-[#F5F1E8] transition-colors"
+                  className="bg-[#FAFAFA] border border-gray-300 text-[#1a1a1a] px-3 py-2 hover:border-gray-400 transition-colors"
                 >
                   <Share2 className="h-3 w-3" />
                 </button>
-                {/* <button
-                  onClick={() => setIsInstagramModalOpen(true)}
-                  className="bg-white border border-[#C4B5A0]/40 text-[#3D3529] px-3 py-2 rounded-xs hover:bg-[#F5F1E8] transition-colors"
-                >
-                  <Instagram className="h-3 w-3" />
-                </button> */}
               </div>
             </div>
           </header>
 
           {/* Featured Image */}
           <div className="mb-8">
-            <div className="border border-[#C4B5A0]/40 rounded-xs overflow-hidden">
+            <div className="border border-gray-200 overflow-hidden">
               <Image
                 src={story.thumbnail || "/placeholder.svg"}
                 alt={story.thumbnail_alt as string}
@@ -260,7 +244,7 @@ export default function StoryPage({
               />
             </div>
             {story.thumbnail_alt && (
-              <p className="text-xs text-[#8B7355] mt-2 pl-1">
+              <p className="text-xs text-gray-600 mt-2 pl-1">
                 {story.thumbnail_alt}
               </p>
             )}
@@ -274,25 +258,27 @@ export default function StoryPage({
             </div>
           </div>
 
-          <div className="my-8 border-t border-[#C4B5A0]/40"></div>
+          <div className="my-8 border-t border-gray-200"></div>
 
           {/* Comments Section */}
           <section>
-            <div className="bg-[#E8DDD4] border border-[#C4B5A0]/40 px-4 py-2 inline-block mb-6 font-semibold text-sm rounded-xs text-[#3D3529]">
-              <h2 className="text-base">Comments ({story?.comments?.length})</h2>
+            <div className="mb-6">
+              <h2 className="text-xl font-bold uppercase tracking-wider text-[#1a1a1a]">
+                Comments ({story?.comments?.length || 0})
+              </h2>
             </div>
 
             {/* Add Comment Form */}
             {user ? (
               <form onSubmit={handleComment} className="mb-8">
-                <div className="bg-white border border-[#C4B5A0]/40 rounded-xs shadow-sm p-4">
+                <div className="bg-[#FAFAFA] border border-gray-200 p-4">
                   <div className="flex gap-3">
-                    <div className="w-10 h-10 border border-[#C4B5A0]/40 bg-gradient-to-br from-[#6B8E5A] to-[#A8C5A0] flex items-center justify-center font-semibold text-sm flex-shrink-0 rounded-xs">
+                    <div className="w-10 h-10 border border-gray-300 bg-[#2a2a2a] flex items-center justify-center font-semibold text-sm flex-shrink-0 text-white">
                       {user.picture ? (
                         <img
                           src={user.picture}
                           alt={user.name}
-                          className="w-full h-full object-cover rounded-xs"
+                          className="w-full h-full object-cover"
                         />
                       ) : (
                         user.name.charAt(0).toUpperCase()
@@ -303,13 +289,13 @@ export default function StoryPage({
                         placeholder="Write a comment..."
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
-                        className="w-full px-3 py-2 border border-[#C4B5A0]/60 font-normal text-sm mb-3 rounded-xs focus:outline-none focus:ring-2 focus:ring-[#0C3E2D]/30 focus:border-[#0C3E2D] transition-all text-[#3D3529]"
+                        className="w-full px-3 py-2 border border-gray-300 font-normal text-sm mb-3 focus:outline-none focus:border-gray-400 transition-all text-[#1a1a1a] bg-[#FAFAFA]"
                         rows={3}
                       />
                       <button
                         type="submit"
                         disabled={!newComment.trim() || reactionCommentLoading}
-                        className="bg-[#0C3E2D] text-white font-semibold text-xs px-4 py-2 rounded-xs hover:bg-[#0A3225] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="bg-[#2a2a2a] text-white font-bold uppercase tracking-wider text-xs px-4 py-2 hover:bg-[#3a3a3a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {reactionCommentLoading ? (
                           <span className="flex items-center gap-2">
@@ -325,10 +311,10 @@ export default function StoryPage({
                 </div>
               </form>
             ) : (
-              <div className="mb-8 p-6 border border-[#C4B5A0]/40 bg-[#E8DDD4] text-center rounded-xs">
-                <p className="text-sm text-[#5A4A3A]">
+              <div className="mb-8 p-6 border border-gray-200 bg-[#FAFAFA] text-center">
+                <p className="text-sm text-gray-600">
                   Please{" "}
-                  <a href="/login" className="underline hover:text-[#0C3E2D] text-[#0C3E2D]">
+                  <a href="/login" className="underline hover:text-[#1a1a1a] text-[#1a1a1a]">
                     login
                   </a>{" "}
                   to comment on this story.
@@ -341,15 +327,15 @@ export default function StoryPage({
               {story?.comments?.map((comment) => (
                 <div
                   key={comment.id}
-                  className="bg-white border border-[#C4B5A0]/40 rounded-xs shadow-sm p-4"
+                  className="bg-[#FAFAFA] border border-gray-200 p-4"
                 >
                   <div className="flex gap-3">
-                    <div className="w-10 h-10 border border-[#C4B5A0]/40 bg-gradient-to-br from-[#6B8E5A] to-[#A8C5A0] flex items-center justify-center font-semibold text-sm flex-shrink-0 rounded-xs">
+                    <div className="w-10 h-10 border border-gray-300 bg-[#2a2a2a] flex items-center justify-center font-semibold text-sm flex-shrink-0 text-white">
                       {comment.user?.picture ? (
                         <img
                           src={comment.user.picture}
                           alt={comment.user.name}
-                          className="w-full h-full object-cover rounded-xs"
+                          className="w-full h-full object-cover"
                         />
                       ) : (
                         comment.user?.name?.charAt(0).toUpperCase() || "U"
@@ -359,10 +345,10 @@ export default function StoryPage({
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <span className="font-semibold text-sm text-[#3D3529]">
+                            <span className="font-bold text-sm text-[#1a1a1a]">
                               {comment.user?.name || "Anonymous"}
                             </span>
-                            <span className="text-xs font-normal bg-[#F5F1E8] border border-[#C4B5A0]/40 px-2 py-1 rounded-xs text-[#8B7355]">
+                            <span className="text-xs font-normal bg-[#FAFAFA] border border-gray-200 px-2 py-1 text-gray-600">
                               {formatDistanceToNow(
                                 new Date(comment.created_at),
                                 {
@@ -371,12 +357,12 @@ export default function StoryPage({
                               )}
                             </span>
                           </div>
-                          <p className="text-sm text-[#5A4A3A] leading-relaxed">{comment.content}</p>
+                          <p className="text-sm text-gray-700 leading-relaxed">{comment.content}</p>
                         </div>
                         {user?.id === comment.user?.id && (
                           <button
                             onClick={() => handleDeleteComment(comment.id)}
-                            className="bg-white border border-[#C4B5A0]/40 text-[#5A4A3A] p-2 rounded-xs hover:bg-[#F5F1E8] transition-colors"
+                            className="bg-[#FAFAFA] border border-gray-300 text-gray-600 p-2 hover:border-gray-400 transition-colors"
                           >
                             {reactionDeleteCommentLoading &&
                             comment?.id === deletingId ? (
@@ -406,8 +392,8 @@ export default function StoryPage({
               ))}
 
               {story?.comments?.length === 0 && (
-                <div className="text-center py-8 bg-white border border-[#C4B5A0]/40 rounded-xs">
-                  <p className="text-sm text-[#5A4A3A]">
+                <div className="text-center py-8 bg-[#FAFAFA] border border-gray-200">
+                  <p className="text-sm text-gray-600">
                     No comments yet. Be the first to comment!
                   </p>
                 </div>

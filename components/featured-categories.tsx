@@ -56,10 +56,10 @@ export function FeaturedCategories() {
   return (
     <section className="py-8">
       <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-black uppercase mb-2 text-[#3D3529]">
+        <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-wider mb-2 text-[#1a1a1a]">
           Explore by Category
         </h2>
-        <p className="text-xs text-[#8B7355] max-w-2xl mx-auto">
+        <p className="text-xs text-[#1a1a1a]/50 max-w-2xl mx-auto">
           Dive deep into your favorite entertainment topics with our
           comprehensive coverage
         </p>
@@ -71,22 +71,22 @@ export function FeaturedCategories() {
           return (
             <Link key={category.slug} href={`/?category=${category.slug}`}>
               <div
-                className={`${category.bgColor} border border-[#C4B5A0]/40 hover:shadow-md transition-all duration-200 p-4 rounded-xs group`}
+                className="bg-[#FAFAFA] border border-gray-200 hover:border-gray-300 transition-all duration-200 p-4 group"
               >
-                <div className="w-12 h-12 bg-[#3D3529] border border-[#C4B5A0]/40 flex items-center justify-center mb-3 rounded-xs">
+                <div className="w-12 h-12 bg-[#2a2a2a] border border-[#2a2a2a] flex items-center justify-center mb-3">
                   <IconComponent className="h-6 w-6 text-white" />
                 </div>
 
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-base font-semibold text-[#3D3529]">
+                  <h3 className="text-base font-bold text-[#1a1a1a]">
                     {category.name}
                   </h3>
-                  <div className="bg-[#0C3E2D] text-white border border-[#0C3E2D] px-2 py-1 text-xs font-semibold rounded-xs">
+                  <div className="bg-[#2a2a2a] text-white border border-[#2a2a2a] px-2 py-1 text-xs font-bold uppercase tracking-wider">
                     {category.storyCount}
                   </div>
                 </div>
 
-                <p className="text-xs text-[#5A4A3A] leading-relaxed">
+                <p className="text-xs text-[#1a1a1a]/60 leading-relaxed">
                   {category.description}
                 </p>
               </div>
