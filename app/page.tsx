@@ -14,7 +14,6 @@ import { BreakingNewsTicker } from "@/components/breaking-news-ticker";
 import { TrendingSection } from "@/components/trending-section";
 import { NewsletterSignup } from "@/components/newsletter-signup";
 import { Footer } from "@/components/footer";
-import { AdBannerPlaceholder, SideAdBanners } from "../components/ad-banner";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearch } from "@/hooks/use-search";
@@ -123,17 +122,6 @@ function HomeContent() {
         <Header />
         <BreakingNewsTicker />
         <CategoryNav />
-        {/* Banner Ad Placeholder */}
-        <AdBannerPlaceholder className="mt-4 mb-8" />
-        {/* Fixed side vertical banners */}
-        <SideAdBanners
-          topOffset={0}
-          gap={24}
-          containerWidth={1024}
-          bannerWidth={160}
-          bannerHeight={660}
-          anchorId="featured-top"
-        />
 
         <main className="flex-grow">
           <div className="max-w-5xl mx-auto px-4 py-4">
